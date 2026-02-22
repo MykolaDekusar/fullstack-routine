@@ -1,33 +1,41 @@
 let result = 0;
 
 // Funzioni
-
 function sumFunction() {
-  result = result + parseInt(userInput.value);
-  outputResult(result, "");
-  return;
+  const enteredNumber = parseInt(userInput.value);
+  const initialResult = result;
+  result = result + enteredNumber;
+  outputResult(result, `${initialResult} + ${enteredNumber}`);
 }
 
-function subFunction(num1, num2) {
-  return num1 - num2;
+function subFunction() {
+  const enteredNumber = parseInt(userInput.value);
+  const initialResult = result;
+  result = result - enteredNumber;
+  outputResult(result, `${initialResult} - ${enteredNumber}`);
 }
 
-function multFunction(num1, num2) {
-  return num1 * num2;
+function multFunction() {
+  const enteredNumber = parseInt(userInput.value);
+  const initialResult = result;
+  result = result * enteredNumber;
+  outputResult(result, `${initialResult} * ${enteredNumber}`);
 }
 
-function divideFunction(num1, num2) {
-  if (num2 === 0) {
+function divideFunction() {
+  const enteredNumber = parseInt(userInput.value);
+
+  if (parseInt(userInput.value) === 0) {
     alert("Error: division by zero");
-    return
+    return;
   }
-  return num1 / num2;
+  const initialResult = result;
+  result = result / enteredNumber;
+  outputResult(result, `${initialResult} / ${enteredNumber}`);
 }
 
 // Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
-addBtn.addEventListener("click", sumFunction); 
+addBtn.addEventListener("click", sumFunction);
 subtractBtn.addEventListener("click", subFunction);
 multiplyBtn.addEventListener("click", multFunction);
 divideBtn.addEventListener("click", divideFunction);
-
-

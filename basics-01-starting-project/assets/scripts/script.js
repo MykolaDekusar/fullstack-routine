@@ -1,13 +1,11 @@
 let result = 0;
 
-result = result + 10;
-
-outputResult(result, "");
-
 // Funzioni
 
-function sumFunction(num1, num2) {
-  return num1 + num2;
+function sumFunction() {
+  result = result + parseInt(userInput.value);
+  outputResult(result, "");
+  return;
 }
 
 function subFunction(num1, num2) {
@@ -25,3 +23,11 @@ function divideFunction(num1, num2) {
   }
   return num1 / num2;
 }
+
+// Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
+addBtn.addEventListener("click", sumFunction); 
+subtractBtn.addEventListener("click", subFunction);
+multiplyBtn.addEventListener("click", multFunction);
+divideBtn.addEventListener("click", divideFunction);
+
+

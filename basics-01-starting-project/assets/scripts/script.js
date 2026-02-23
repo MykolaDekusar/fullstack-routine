@@ -6,11 +6,15 @@ let firstOperand;
 let chainingNumbers = false;
 
 // Funzioni
+function getUserNumberInput() {
+  return userInput.valueAsNumber;
+}
+
 function chooseOperation(operator) {
   // Se NON stiamo continuando un calcolo precedente, prendiamo il numero dall'input
   // Altrimenti, lasciamo intatto il firstOperand (che è già uguale al currentResult)
   if (!chainingNumbers) {
-    firstOperand = userInput.valueAsNumber;
+    firstOperand = getUserNumberInput();
   }
   selectedOperation = operator;
 
@@ -40,7 +44,7 @@ function divideFunction() {
 }
 
 function calculateResult() {
-  const enteredNumber = userInput.valueAsNumber;
+  const enteredNumber = getUserNumberInput();
   if (!selectedOperation) return;
 
   // Eseguiamo il calcolo in base all'operazione scelta

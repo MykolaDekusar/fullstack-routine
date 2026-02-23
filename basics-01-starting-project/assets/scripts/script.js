@@ -1,11 +1,20 @@
 let currentResult = 0;
 let selectedOperation = "";
 let firstOperand = 0;
+let chainingNumbers = false;
 
 // Funzioni
 function chooseOperation(operator) {
-  firstOperand = userInput.valueAsNumber;
+  // Se NON stiamo continuando un calcolo precedente, prendiamo il numero dall'input
+  // Altrimenti, lasciamo intatto il firstOperand (che è già uguale al currentResult)
+  if(!chainingNumbers){
+    firstOperand = userInput.valueAsNumber;
+  }
   selectedOperation = operator;
+  // Svuotiamo imput visivo del calcolatore per il secondo numero
+  userInput.value = "";
+  // Resettiamo il flag, perchè siamo pronti a ricevere il secondo numero
+  chainingNumbers = false;
 }
 
 function sumFunction() {
@@ -49,6 +58,11 @@ function calculateResult() {
   // Resettiamo l'operatore per non causare bug
   selectedOperation = "";
 
+  // Impostiamo il risultato come nuovo primo operatore
+  firstOperand = currentResult;
+
+  // Diciamo al programma che il prossimo operatore cliccato dovrà utilizzare questo risultato
+  chainingNumbers = true;
   
 }
 

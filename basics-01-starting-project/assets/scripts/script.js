@@ -1,20 +1,26 @@
+// All'avvio dello script (quando apri la pagina), posizioniamo subito il cursore nel campo del testo
+userInput.focus();
 let currentResult = 0;
 let selectedOperation = "";
-let firstOperand = 0;
+let firstOperand;
 let chainingNumbers = false;
 
 // Funzioni
 function chooseOperation(operator) {
   // Se NON stiamo continuando un calcolo precedente, prendiamo il numero dall'input
   // Altrimenti, lasciamo intatto il firstOperand (che è già uguale al currentResult)
-  if(!chainingNumbers){
+  if (!chainingNumbers) {
     firstOperand = userInput.valueAsNumber;
   }
   selectedOperation = operator;
+
   // Svuotiamo imput visivo del calcolatore per il secondo numero
   userInput.value = "";
+
   // Resettiamo il flag, perchè siamo pronti a ricevere il secondo numero
   chainingNumbers = false;
+  // Rimettiamo il focus sull'input dopo aver scelto l'operazione
+  userInput.focus();
 }
 
 function sumFunction() {
@@ -53,7 +59,10 @@ function calculateResult() {
   }
 
   // Stampiamo a schermo l'intera equazione e il risultato
-  outputResult(currentResult, `${firstOperand} ${selectedOperation} ${enteredNumber}`);
+  outputResult(
+    currentResult,
+    `${firstOperand} ${selectedOperation} ${enteredNumber}`,
+  );
 
   // Resettiamo l'operatore per non causare bug
   selectedOperation = "";
@@ -63,7 +72,8 @@ function calculateResult() {
 
   // Diciamo al programma che il prossimo operatore cliccato dovrà utilizzare questo risultato
   chainingNumbers = true;
-  
+  // Rimettiamo il focus sull'input anche dopo aver cliccato "="
+  userInput.focus();
 }
 
 // Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire

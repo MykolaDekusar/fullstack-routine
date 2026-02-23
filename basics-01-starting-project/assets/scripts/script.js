@@ -1,37 +1,55 @@
-let result = 0;
+let currentResult = 0;
+let selectedOperation = "";
+let firstOperand = 0;
 
 // Funzioni
+function chooseOperation(operator) {
+  firstOperand = userInput.valueAsNumber;
+  selectedOperation = operator;
+}
+
 function sumFunction() {
-  const enteredNumber = parseInt(userInput.value);
-  const initialResult = result;
-  result = result + enteredNumber;
-  outputResult(result, `${initialResult} + ${enteredNumber}`);
+  chooseOperation("+");
 }
 
 function subFunction() {
-  const enteredNumber = parseInt(userInput.value);
-  const initialResult = result;
-  result = result - enteredNumber;
-  outputResult(result, `${initialResult} - ${enteredNumber}`);
+  chooseOperation("-");
 }
 
 function multFunction() {
-  const enteredNumber = parseInt(userInput.value);
-  const initialResult = result;
-  result = result * enteredNumber;
-  outputResult(result, `${initialResult} * ${enteredNumber}`);
+  chooseOperation("*");
 }
 
 function divideFunction() {
-  const enteredNumber = parseInt(userInput.value);
+  chooseOperation("/");
+}
 
-  if (parseInt(userInput.value) === 0) {
-    alert("Error: division by zero");
-    return;
+function calculateResult() {
+  const enteredNumber = userInput.valueAsNumber;
+  if (!selectedOperation) return;
+
+  // Eseguiamo il calcolo in base all'operazione scelta
+  if (selectedOperation === "+") {
+    currentResult = firstOperand + enteredNumber;
+  } else if (selectedOperation === "-") {
+    currentResult = firstOperand - enteredNumber;
+  } else if (selectedOperation === "*") {
+    currentResult = firstOperand * enteredNumber;
+  } else if (selectedOperation === "/") {
+    if (enteredNumber === 0) {
+      alert("Divisione per 0, ERRORE!!!");
+      return;
+    }
+    currentResult = firstOperand / enteredNumber;
   }
-  const initialResult = result;
-  result = result / enteredNumber;
-  outputResult(result, `${initialResult} / ${enteredNumber}`);
+
+  // Stampiamo a schermo l'intera equazione e il risultato
+  outputResult(currentResult, `${firstOperand} ${selectedOperation} ${enteredNumber}`);
+
+  // Resettiamo l'operatore per non causare bug
+  selectedOperation = "";
+
+  
 }
 
 // Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
@@ -39,3 +57,4 @@ addBtn.addEventListener("click", sumFunction);
 subtractBtn.addEventListener("click", subFunction);
 multiplyBtn.addEventListener("click", multFunction);
 divideBtn.addEventListener("click", divideFunction);
+resultBtn.addEventListener("click", calculateResult);

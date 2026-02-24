@@ -4,6 +4,7 @@ let currentResult = 0;
 let selectedOperation = "";
 let firstOperand;
 let chainingNumbers = false;
+let calculationLog = [];
 
 // Funzioni
 function getUserNumberInput() {
@@ -43,6 +44,17 @@ function divideFunction() {
   chooseOperation("/");
 }
 
+function logFunction(n1,n2,oper,res){
+   const currentLog = {
+    currentNumber: n1,
+    nextNumber: n2,
+    operation: oper,
+    calculationResult: res
+  }
+
+  calculationLog.push(currentLog);
+}
+
 function calculateResult() {
   const enteredNumber = getUserNumberInput();
   if (!selectedOperation) return;
@@ -68,6 +80,10 @@ function calculateResult() {
     `${firstOperand} ${selectedOperation} ${enteredNumber}`,
   );
 
+  // Creaiamo un log dei calcoli ad ogni uguale
+  logFunction(firstOperand, enteredNumber, selectedOperation, currentResult);
+  console.log(calculationLog);
+
   // Resettiamo l'operatore per non causare bug
   selectedOperation = "";
 
@@ -78,6 +94,7 @@ function calculateResult() {
   chainingNumbers = true;
   // Rimettiamo il focus sull'input anche dopo aver cliccato "="
   userInput.focus();
+  
 }
 
 // Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire

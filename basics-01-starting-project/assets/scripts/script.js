@@ -11,6 +11,13 @@ function getUserNumberInput() {
   return userInput.valueAsNumber;
 }
 
+// Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
+addBtn.addEventListener("click", () => chooseOperation("+"));
+subtractBtn.addEventListener("click", () => chooseOperation("-"));
+multiplyBtn.addEventListener("click", () => chooseOperation("*"));
+divideBtn.addEventListener("click", () => chooseOperation("/"));
+resultBtn.addEventListener("click", calculateResult);
+
 function chooseOperation(operator) {
   // Se NON stiamo continuando un calcolo precedente, prendiamo il numero dall'input
   // Altrimenti, lasciamo intatto il firstOperand (che è già uguale al currentResult)
@@ -24,33 +31,18 @@ function chooseOperation(operator) {
 
   // Resettiamo il flag, perchè siamo pronti a ricevere il secondo numero
   chainingNumbers = false;
+
   // Rimettiamo il focus sull'input dopo aver scelto l'operazione
   userInput.focus();
 }
 
-function sumFunction() {
-  chooseOperation("+");
-}
-
-function subFunction() {
-  chooseOperation("-");
-}
-
-function multFunction() {
-  chooseOperation("*");
-}
-
-function divideFunction() {
-  chooseOperation("/");
-}
-
-function logFunction(n1,n2,oper,res){
-   const currentLog = {
+function logFunction(n1, n2, oper, res) {
+  const currentLog = {
     currentNumber: n1,
     nextNumber: n2,
     operation: oper,
-    calculationResult: res
-  }
+    calculationResult: res,
+  };
 
   calculationLog.push(currentLog);
 }
@@ -92,14 +84,7 @@ function calculateResult() {
 
   // Diciamo al programma che il prossimo operatore cliccato dovrà utilizzare questo risultato
   chainingNumbers = true;
+
   // Rimettiamo il focus sull'input anche dopo aver cliccato "="
   userInput.focus();
-  
 }
-
-// Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
-addBtn.addEventListener("click", sumFunction);
-subtractBtn.addEventListener("click", subFunction);
-multiplyBtn.addEventListener("click", multFunction);
-divideBtn.addEventListener("click", divideFunction);
-resultBtn.addEventListener("click", calculateResult);

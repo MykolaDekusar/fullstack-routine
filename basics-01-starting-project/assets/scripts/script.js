@@ -51,18 +51,26 @@ function calculateResult() {
   const enteredNumber = getUserNumberInput();
   if (!selectedOperation || isNaN(enteredNumber)) return;
   if (enteredNumber === 0) {
-      alert("Divisione per 0, ERRORE!!!");
-      return;
-    }
+    alert("Divisione per 0, ERRORE!!!");
+    return;
+  }
+
   // Eseguiamo il calcolo in base all'operazione scelta
-  if (selectedOperation === "+") {
-    currentResult = firstOperand + enteredNumber;
-  } else if (selectedOperation === "-") {
-    currentResult = firstOperand - enteredNumber;
-  } else if (selectedOperation === "*") {
-    currentResult = firstOperand * enteredNumber;
-  } else if (selectedOperation === "/") {
-    currentResult = firstOperand / enteredNumber;
+  switch (selectedOperation) {
+    case "+":
+      currentResult = firstOperand + enteredNumber;
+      break;
+    case "-":
+      currentResult = firstOperand - enteredNumber;
+      break;
+    case "*":
+      currentResult = firstOperand * enteredNumber;
+      break;
+    case "/":
+      currentResult = firstOperand / enteredNumber;
+      break;
+    default:
+      return;
   }
 
   // Stampiamo a schermo l'intera equazione e il risultato

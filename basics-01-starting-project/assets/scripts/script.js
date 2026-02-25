@@ -2,38 +2,12 @@
 userInput.focus();
 let currentResult = 0;
 let selectedOperation = "";
-let firstOperand;
+let firstOperand = null;
 let chainingNumbers = false;
 let calculationLog = [];
 
-// Funzioni
 function getUserNumberInput() {
   return userInput.valueAsNumber;
-}
-
-// Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
-addBtn.addEventListener("click", () => chooseOperation("+"));
-subtractBtn.addEventListener("click", () => chooseOperation("-"));
-multiplyBtn.addEventListener("click", () => chooseOperation("*"));
-divideBtn.addEventListener("click", () => chooseOperation("/"));
-resultBtn.addEventListener("click", calculateResult);
-
-function chooseOperation(operator) {
-  // Se NON stiamo continuando un calcolo precedente, prendiamo il numero dall'input
-  // Altrimenti, lasciamo intatto il firstOperand (che è già uguale al currentResult)
-  if (!chainingNumbers) {
-    firstOperand = getUserNumberInput();
-  }
-  selectedOperation = operator;
-
-  // Svuotiamo imput visivo del calcolatore per il secondo numero
-  userInput.value = "";
-
-  // Resettiamo il flag, perchè siamo pronti a ricevere il secondo numero
-  chainingNumbers = false;
-
-  // Rimettiamo il focus sull'input dopo aver scelto l'operazione
-  userInput.focus();
 }
 
 function logFunction(n1, n2, oper, res) {
@@ -47,10 +21,39 @@ function logFunction(n1, n2, oper, res) {
   calculationLog.push(currentLog);
 }
 
+// Aggiungiamo gli event listeneres ai bottoni con eventuali funzioni da eseguire
+addBtn.addEventListener("click", () => chooseOperation("+"));
+subtractBtn.addEventListener("click", () => chooseOperation("-"));
+multiplyBtn.addEventListener("click", () => chooseOperation("*"));
+divideBtn.addEventListener("click", () => chooseOperation("/"));
+resultBtn.addEventListener("click", calculateResult);
+
+function chooseOperation(operator) {
+  const enteredNumber = getUserNumberInput();
+  // VALIDAZIONE: Blocca tutto se l'input è vuoto e non stiamo concatenando
+  if (isNaN(enteredNumber) && !chainingNumbers) {
+    alert("Inserisci un numero valido prima di scegliere un'operazione.");
+    return;
+  }
+  // Se NON stiamo continuando un calcolo precedente, prendiamo il numero dall'input
+  // Altrimenti, lasciamo intatto il firstOperand (che è già uguale al currentResult)
+  if (!chainingNumbers) {
+    firstOperand = enteredNumber;
+  }
+
+  selectedOperation = operator;
+  userInput.value = "";
+  chainingNumbers = false;
+  userInput.focus();
+}
+
 function calculateResult() {
   const enteredNumber = getUserNumberInput();
-  if (!selectedOperation) return;
-
+  if (!selectedOperation || isNaN(enteredNumber)) return;
+  if (enteredNumber === 0) {
+      alert("Divisione per 0, ERRORE!!!");
+      return;
+    }
   // Eseguiamo il calcolo in base all'operazione scelta
   if (selectedOperation === "+") {
     currentResult = firstOperand + enteredNumber;
@@ -59,10 +62,6 @@ function calculateResult() {
   } else if (selectedOperation === "*") {
     currentResult = firstOperand * enteredNumber;
   } else if (selectedOperation === "/") {
-    if (enteredNumber === 0) {
-      alert("Divisione per 0, ERRORE!!!");
-      return;
-    }
     currentResult = firstOperand / enteredNumber;
   }
 

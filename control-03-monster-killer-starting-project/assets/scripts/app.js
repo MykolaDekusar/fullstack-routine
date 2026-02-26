@@ -1,25 +1,33 @@
 const ATTACK_VALUE = 10;
 const STRONG_ATTACK_VALUE = 15;
 const MONSTER_ATTACK_VALUE = 15;
+const draw = "Draw";
+const pWins = "Player Wins";
+const mWins = "Monster Wins";
+const battleLog = [];
+const healing = 50;
+
 let chosenMaxLife = 10;
 let currentMonsterHealth = chosenMaxLife;
 let currentPlayerHealth = chosenMaxLife;
-const battleLog = [];
-let battleCounter = 0;
+let roundCounter = 0;
 
 adjustHealthBars(chosenMaxLife);
 
-function gameLog(playerHeath, monsterHealth, playerAttack) {
+// Registra i dati di ogni turno per il debug e la cronologia finale
+function gameLog(playerHeath, monsterHealth, playerAttack, playerAction, damageTaken) {
   battleLog.push({
     playerHealth: playerHeath,
-    playerDamage: playerAttack,
-    monsterDamage: MONSTER_ATTACK_VALUE,
+    playerAttack: playerAttack,
+    playerAction: playerAction,
+    monsterAttack: damageTaken,
     monsterHealth: monsterHealth,
-    battleRounds: battleCounter + 1,
+    battleRounds: roundCounter + 1,
     battleResult: "unknown",
   });
 }
 
+// L'alert è ritardato per permettere al browser di aggiornare prima la grafica (DOM)
 function showResult(result) {
   setTimeout(() => {
     alert(result);
@@ -31,42 +39,67 @@ function attackHandler() {
 }
 
 function strongAttackHandler() {
-  attackMonster("STRONG ATTACK");
+  attackMonster("STRONG_ATTACK");
 }
 
+function healPlayer() {
+  attackMonster("HEAL");
+}
+
+// Funzione ponte per smistare il tipo di azione scelta dall'utente
 function attackMonster(attackType) {
-  let attackMode;
+  let playerAttack;
+  let playerAction;
   if (attackType === "ATTACK") {
-    attackMode = ATTACK_VALUE;
-  } else {
-    attackMode = STRONG_ATTACK_VALUE;
+    playerAttack = Math.round(Math.random() * ATTACK_VALUE);
+    playerAction= "ATTACK";
+  } else if (attackType === "STRONG_ATTACK") {
+    playerAttack = Math.round(Math.random() * STRONG_ATTACK_VALUE);
+    playerAction= "STRONG_ATTACK";
+  } else if (attackType === "HEAL") {
+    playerAttack = 0;
+    playerAction = "HEAL";
   }
-  const draw = "Draw";
-  const pWins = "Player Wins";
-  const mWins = "Monster Wins";
+  healOrDamage(playerAction, playerAttack);
+}
 
-  const damageDealt = dealMonsterDamage(attackMode);
-  currentMonsterHealth -= damageDealt;
+// Logica principale: calcola i cambiamenti di salute e verifica la fine del gioco
+function healOrDamage(playerAction, playerAttack) {
+  if (playerAction === "HEAL") {
+    let effectiveHeal = healing;
+    // Impedisce alla vita del giocatore di superare il limite massimo impostato
+    if(currentPlayerHealth + effectiveHeal > chosenMaxLife){
+      effectiveHeal = chosenMaxLife - currentPlayerHealth;
+    } 
+    currentPlayerHealth += effectiveHeal
+    increasePlayerHealth(effectiveHeal);
+  } else {
+    const damageDealt = dealMonsterDamage(playerAttack);
+    currentMonsterHealth -= damageDealt;
+  }
 
-  const damageTaken = dealPlayerDamage(MONSTER_ATTACK_VALUE);
+  // Risposta del mostro: attacca sempre, anche se il giocatore si è curato
+  const damageTaken = dealPlayerDamage(Math.round(Math.random() * MONSTER_ATTACK_VALUE));
   currentPlayerHealth -= damageTaken;
 
-  gameLog(currentPlayerHealth, currentMonsterHealth, attackMode);
+  gameLog(currentPlayerHealth, currentMonsterHealth, playerAttack, playerAction, damageTaken);
 
+  // Controllo degli scenari di fine partita
   if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
-    battleLog[battleCounter].battleResult = draw;
+    battleLog[roundCounter].battleResult = draw;
     showResult("Draw");
   } else if (currentPlayerHealth <= 0) {
-    battleLog[battleCounter].battleResult = mWins;
+    battleLog[roundCounter].battleResult = mWins;
     showResult("Monster wins");
   } else if (currentMonsterHealth <= 0) {
-    battleLog[battleCounter].battleResult = pWins;
+    battleLog[roundCounter].battleResult = pWins;
     showResult("Player wins");
   }
-  battleCounter++;
 
+  roundCounter++;
   console.log(battleLog);
 }
 
 attackBtn.addEventListener("click", attackHandler);
 strongAttackBtn.addEventListener("click", strongAttackHandler);
+healBtn.addEventListener("click", healPlayer);

@@ -15,7 +15,7 @@ function gameLog(playerHeath, monsterHealth, playerAttack) {
     playerDamage: playerAttack,
     monsterDamage: MONSTER_ATTACK_VALUE,
     monsterHealth: monsterHealth,
-    battleRounds: battleCounter+1,
+    battleRounds: battleCounter + 1,
     battleResult: "unknown",
   });
 }
@@ -27,46 +27,31 @@ function showResult(result) {
 }
 
 function attackHandler() {
-  const draw = "Draw";
-  const pWins = "Player Wins";
-  const mWins = "Monster Wins";
-
-  const damageDealt = dealMonsterDamage(ATTACK_VALUE);
-  currentMonsterHealth -= damageDealt;
-
-  const damageTaken = dealPlayerDamage(MONSTER_ATTACK_VALUE);
-  currentPlayerHealth -= damageTaken;
-
-  gameLog(currentPlayerHealth, currentMonsterHealth, ATTACK_VALUE);
- 
-  
-  if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
-    battleLog[battleCounter].battleResult = draw;
-    showResult("Draw");
-  } else if (currentPlayerHealth <= 0) {
-    battleLog[battleCounter].battleResult = mWins;
-    showResult("Monster wins");
-  } else if (currentMonsterHealth <= 0) {
-    battleLog[battleCounter].battleResult = pWins;
-    showResult("Player wins");
-  }
-   battleCounter ++;
-
-  console.log(battleLog);
+  attackMonster("ATTACK");
 }
 
 function strongAttackHandler() {
+  attackMonster("STRONG ATTACK");
+}
+
+function attackMonster(attackType) {
+  let attackMode;
+  if (attackType === "ATTACK") {
+    attackMode = ATTACK_VALUE;
+  } else {
+    attackMode = STRONG_ATTACK_VALUE;
+  }
   const draw = "Draw";
   const pWins = "Player Wins";
   const mWins = "Monster Wins";
 
-  const damageDealt = dealMonsterDamage(STRONG_ATTACK_VALUE);
+  const damageDealt = dealMonsterDamage(attackMode);
   currentMonsterHealth -= damageDealt;
 
   const damageTaken = dealPlayerDamage(MONSTER_ATTACK_VALUE);
   currentPlayerHealth -= damageTaken;
 
-  gameLog(currentPlayerHealth, currentMonsterHealth, STRONG_ATTACK_VALUE);
+  gameLog(currentPlayerHealth, currentMonsterHealth, attackMode);
 
   if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
     battleLog[battleCounter].battleResult = draw;
@@ -78,7 +63,8 @@ function strongAttackHandler() {
     battleLog[battleCounter].battleResult = pWins;
     showResult("Player wins");
   }
-    battleCounter++;
+  battleCounter++;
+
   console.log(battleLog);
 }
 

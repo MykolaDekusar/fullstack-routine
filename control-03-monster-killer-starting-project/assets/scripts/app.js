@@ -55,8 +55,8 @@ function healPlayer() {
 
 // Funzione ponte per smistare il tipo di azione scelta dall'utente
 function attackMonster(attackType) {
-  let playerAttack;
-  let playerAction;
+  let playerAttack = null;
+  let playerAction = null;
   if (attackType === "ATTACK") {
     playerAttack = Math.round(Math.random() * ATTACK_VALUE);
     playerAction = "ATTACK";
@@ -69,8 +69,6 @@ function attackMonster(attackType) {
   }
   healOrDamage(playerAction, playerAttack);
 }
-
-
 
 // Logica principale: calcola i cambiamenti di salute e verifica la fine del gioco
 function healOrDamage(playerAction, playerAttack) {
@@ -92,9 +90,8 @@ function healOrDamage(playerAction, playerAttack) {
     Math.round(Math.random() * MONSTER_ATTACK_VALUE),
   );
   currentPlayerHealth -= damageTaken;
-  console.log(currentPlayerHealth <= 0 && bonusLife === 1);
-  if(currentPlayerHealth <= 0 && bonusLife === 1){
-     
+
+  if (currentPlayerHealth <= 0 && bonusLife === 1) {
     currentPlayerHealth = 1;
     increasePlayerHealth(currentPlayerHealth);
     bonusLife = 0;
@@ -116,21 +113,19 @@ function healOrDamage(playerAction, playerAttack) {
 }
 
 function endGame(currentMonsterHealth, currentPlayerHealth) {
-  
-    if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
-      battleLog[roundCounter].battleResult = draw;
-      showResult("Draw");
-      resetGame(chosenMaxLife);
-    } else if (currentPlayerHealth <= 0) {
-      battleLog[roundCounter].battleResult = mWins;
-      showResult("Monster wins");
-      resetGame(chosenMaxLife);
-    } else if (currentMonsterHealth <= 0) {
-      battleLog[roundCounter].battleResult = pWins;
-      showResult("Player wins");
-      resetGame(chosenMaxLife);
-    }
-    
+  if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
+    battleLog[roundCounter].battleResult = draw;
+    showResult("Draw");
+    resetGame(chosenMaxLife);
+  } else if (currentPlayerHealth <= 0) {
+    battleLog[roundCounter].battleResult = mWins;
+    showResult("Monster wins");
+    resetGame(chosenMaxLife);
+  } else if (currentMonsterHealth <= 0) {
+    battleLog[roundCounter].battleResult = pWins;
+    showResult("Player wins");
+    resetGame(chosenMaxLife);
+  }
 }
 
 attackBtn.addEventListener("click", attackHandler);

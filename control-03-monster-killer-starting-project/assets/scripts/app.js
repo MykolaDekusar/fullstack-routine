@@ -7,13 +7,16 @@ const mWins = "Monster Wins";
 const battleLog = [];
 const healing = 15;
 
-let chosenMaxLife = 20;
-let currentMonsterHealth = chosenMaxLife;
-let currentPlayerHealth = chosenMaxLife;
+// Chiediamo all'utente di inserire la vita sua e del mosto
+const userPlayerHealth = prompt("Inserisci la vita massima del giocatore");
+const userMonsterHealth = prompt("Inserisci la vita massima del mostro");
+
+let currentPlayerHealth = +userPlayerHealth;
+let currentMonsterHealth = +userMonsterHealth;
 let roundCounter = 0;
 let bonusLife = 1;
 
-adjustHealthBars(chosenMaxLife);
+adjustHealthBars(currentPlayerHealth, currentMonsterHealth);
 
 // Registra i dati di ogni turno per il debug e la cronologia finale
 function gameLog(
@@ -74,15 +77,15 @@ function attackMonster(attackType) {
 function healOrDamage(playerAction, playerAttack) {
   if (playerAction === "HEAL") {
     // Verifica per non curarmi con la vita massima
-    if (currentPlayerHealth === chosenMaxLife) {
+    if (currentPlayerHealth === currentPlayerHealth) {
       alert("Hai già la vita piena!!!");
       return;
     }
 
     let effectiveHeal = healing;
     // Impedisce alla vita del giocatore di superare il limite massimo impostato
-    if (currentPlayerHealth + effectiveHeal > chosenMaxLife) {
-      effectiveHeal = chosenMaxLife - currentPlayerHealth;
+    if (currentPlayerHealth + effectiveHeal > currentPlayerHealth) {
+      effectiveHeal = currentPlayerHealth - currentPlayerHealth;
     }
     currentPlayerHealth += effectiveHeal;
     increasePlayerHealth(effectiveHeal);
@@ -126,11 +129,11 @@ function showLog() {
 }
 
 function reset() {
-  currentMonsterHealth = chosenMaxLife;
-  currentPlayerHealth = chosenMaxLife;
+  currentMonsterHealth = userMonsterHealth;
+  currentPlayerHealth = userPlayerHealth;
   bonusLife = 1;
   addBonusLife();
-  resetGame(chosenMaxLife);
+  resetGame(userPlayerHealth, userMonsterHealth);
 }
 
 function endGame(currentMonsterHealth, currentPlayerHealth) {

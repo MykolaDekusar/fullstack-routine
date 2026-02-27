@@ -8,8 +8,16 @@ const battleLog = [];
 const healing = 15;
 
 // Chiediamo all'utente di inserire la vita sua e del mosto
-const userPlayerHealth = prompt("Inserisci la vita massima del giocatore");
-const userMonsterHealth = prompt("Inserisci la vita massima del mostro");
+let userPlayerHealth = prompt("Inserisci la vita massima del giocatore");
+while(isNaN(+userPlayerHealth) || +userPlayerHealth <= 0){
+  userPlayerHealth = prompt("Inserisci un valore valido per la vita massima del giocatore");
+}
+
+let userMonsterHealth = prompt("Inserisci la vita massima del mostro");
+while(isNaN(+userMonsterHealth) || +userMonsterHealth <= 0){
+  userMonsterHealth = prompt("Inserisci un valore valido per la vita massima del mostro");
+}
+
 
 let currentPlayerHealth = +userPlayerHealth;
 let currentMonsterHealth = +userMonsterHealth;

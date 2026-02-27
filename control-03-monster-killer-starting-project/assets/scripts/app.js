@@ -6,23 +6,37 @@ const pWins = "Player Wins";
 const mWins = "Monster Wins";
 const battleLog = [];
 const healing = 15;
-
-// Chiediamo all'utente di inserire la vita sua e del mosto
-let userPlayerHealth = prompt("Inserisci la vita massima del giocatore");
-while(isNaN(+userPlayerHealth) || +userPlayerHealth <= 0){
-  userPlayerHealth = prompt("Inserisci un valore valido per la vita massima del giocatore");
-}
-
-let userMonsterHealth = prompt("Inserisci la vita massima del mostro");
-while(isNaN(+userMonsterHealth) || +userMonsterHealth <= 0){
-  userMonsterHealth = prompt("Inserisci un valore valido per la vita massima del mostro");
-}
-
-
-let currentPlayerHealth = +userPlayerHealth;
-let currentMonsterHealth = +userMonsterHealth;
+const MODE_ATTACK = "ATTACK";
+const MODE_STRONG_ATTACK = "STRONG_ATTACK";
+const MODE_HEALING = "HEAL";
 let roundCounter = 0;
 let bonusLife = 1;
+
+// Chiediamo la vita del giocatore e convertiamo subito in intero
+let inputPlayerHealth = parseInt(
+  prompt("Inserisci la vita massima del giocatore (es: 100)"),
+);
+
+// Se l'utente preme Annulla (null), inserisce lettere (NaN) o un numero <= 0, diamo un default
+if (isNaN(inputPlayerHealth) || inputPlayerHealth <= 0) {
+  inputPlayerHealth = 100;
+  console.log("Valore non valido. Impostata vita giocatore a 100 di default.");
+}
+
+let inputMonsterHealth = parseInt(
+  prompt("Inserisci la vita massima del mostro (es: 100)"),
+);
+
+if (isNaN(inputMonsterHealth) || inputMonsterHealth <= 0) {
+  inputMonsterHealth = 100;
+  console.log("Valore non valido. Impostata vita mostro a 100 di default.");
+}
+
+// Inizializziamo le variabili globali
+let userPlayerHealth = inputPlayerHealth;
+let userMonsterHealth = inputMonsterHealth;
+let currentPlayerHealth = userPlayerHealth;
+let currentMonsterHealth = userMonsterHealth;
 
 adjustHealthBars(currentPlayerHealth, currentMonsterHealth);
 
@@ -53,47 +67,47 @@ function showResult(result) {
 }
 
 function attackHandler() {
-  attackMonster("ATTACK");
+  attackMonster(MODE_ATTACK);
 }
 
 function strongAttackHandler() {
-  attackMonster("STRONG_ATTACK");
+  attackMonster(MODE_STRONG_ATTACK);
 }
 
 function healPlayer() {
-  attackMonster("HEAL");
+  attackMonster(MODE_HEALING);
 }
 
 // Funzione ponte per smistare il tipo di azione scelta dall'utente
 function attackMonster(attackType) {
   let playerAttack = null;
   let playerAction = null;
-  if (attackType === "ATTACK") {
+  if (attackType === MODE_ATTACK) {
     playerAttack = Math.round(Math.random() * ATTACK_VALUE);
-    playerAction = "ATTACK";
-  } else if (attackType === "STRONG_ATTACK") {
+    playerAction = MODE_ATTACK;
+  } else if (attackType === MODE_STRONG_ATTACK) {
     playerAttack = Math.round(Math.random() * STRONG_ATTACK_VALUE);
-    playerAction = "STRONG_ATTACK";
-  } else if (attackType === "HEAL") {
+    playerAction = MODE_STRONG_ATTACK;
+  } else if (attackType === MODE_HEALING) {
     playerAttack = 0;
-    playerAction = "HEAL";
+    playerAction = MODE_HEALING;
   }
   healOrDamage(playerAction, playerAttack);
 }
 
 // Logica principale: calcola i cambiamenti di salute e verifica la fine del gioco
 function healOrDamage(playerAction, playerAttack) {
-  if (playerAction === "HEAL") {
+  if (playerAction === MODE_HEALING) {
     // Verifica per non curarmi con la vita massima
-    if (currentPlayerHealth === currentPlayerHealth) {
+    if (currentPlayerHealth >= inputPlayerHealth) {
       alert("Hai già la vita piena!!!");
       return;
     }
 
     let effectiveHeal = healing;
     // Impedisce alla vita del giocatore di superare il limite massimo impostato
-    if (currentPlayerHealth + effectiveHeal > currentPlayerHealth) {
-      effectiveHeal = currentPlayerHealth - currentPlayerHealth;
+    if (currentPlayerHealth + effectiveHeal > inputPlayerHealth) {
+      effectiveHeal = inputPlayerHealth - currentPlayerHealth;
     }
     currentPlayerHealth += effectiveHeal;
     increasePlayerHealth(effectiveHeal);
@@ -147,15 +161,15 @@ function reset() {
 function endGame(currentMonsterHealth, currentPlayerHealth) {
   if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
     battleLog[roundCounter].battleResult = draw;
-    showResult("Draw");
+    showResult(draw);
     reset();
   } else if (currentPlayerHealth <= 0) {
     battleLog[roundCounter].battleResult = mWins;
-    showResult("Monster wins");
+    showResult(mWins);
     reset();
   } else if (currentMonsterHealth <= 0) {
     battleLog[roundCounter].battleResult = pWins;
-    showResult("Player wins");
+    showResult(pWins);
     reset();
   }
 }

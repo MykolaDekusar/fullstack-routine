@@ -73,6 +73,12 @@ function attackMonster(attackType) {
 // Logica principale: calcola i cambiamenti di salute e verifica la fine del gioco
 function healOrDamage(playerAction, playerAttack) {
   if (playerAction === "HEAL") {
+    // Verifica per non curarmi con la vita massima
+    if(currentPlayerHealth === chosenMaxLife){
+      alert("Hai già la vita piena!!!");
+      return;
+    }
+
     let effectiveHeal = healing;
     // Impedisce alla vita del giocatore di superare il limite massimo impostato
     if (currentPlayerHealth + effectiveHeal > chosenMaxLife) {
@@ -109,7 +115,11 @@ function healOrDamage(playerAction, playerAttack) {
   endGame(currentMonsterHealth, currentPlayerHealth);
 
   roundCounter++;
-  console.log(battleLog);
+  console.table(battleLog);
+}
+
+function showLog(){
+  alert(battleLog);
 }
 
 function endGame(currentMonsterHealth, currentPlayerHealth) {
@@ -131,3 +141,4 @@ function endGame(currentMonsterHealth, currentPlayerHealth) {
 attackBtn.addEventListener("click", attackHandler);
 strongAttackBtn.addEventListener("click", strongAttackHandler);
 healBtn.addEventListener("click", healPlayer);
+logBtn.addEventListener("click", showLog);

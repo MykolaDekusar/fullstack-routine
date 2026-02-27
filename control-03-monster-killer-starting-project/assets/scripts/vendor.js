@@ -36,7 +36,11 @@ function resetGame(value) {
 }
 
 function removeBonusLife() {
-  bonusLifeEl.parentNode.removeChild(bonusLifeEl);
+  bonusLifeEl.classList.add('hidden');
+}
+
+function addBonusLife() {
+  bonusLifeEl.classList.remove('hidden');
 }
 
 function setPlayerHealth(health) {

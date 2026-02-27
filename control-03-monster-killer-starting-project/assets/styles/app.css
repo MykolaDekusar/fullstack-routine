@@ -84,3 +84,7 @@ button:active {
   text-align: center;
   margin: 0 0.5rem;
 }
+
+.hidden {
+  display: none;
+}

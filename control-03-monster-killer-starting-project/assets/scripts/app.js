@@ -38,7 +38,7 @@ function gameLog(
 function showResult(result) {
   setTimeout(() => {
     alert(result);
-  }, 100);
+  }, 200);
 }
 
 function attackHandler() {
@@ -74,7 +74,7 @@ function attackMonster(attackType) {
 function healOrDamage(playerAction, playerAttack) {
   if (playerAction === "HEAL") {
     // Verifica per non curarmi con la vita massima
-    if(currentPlayerHealth === chosenMaxLife){
+    if (currentPlayerHealth === chosenMaxLife) {
       alert("Hai già la vita piena!!!");
       return;
     }
@@ -98,10 +98,13 @@ function healOrDamage(playerAction, playerAttack) {
   currentPlayerHealth -= damageTaken;
 
   if (currentPlayerHealth <= 0 && bonusLife === 1) {
-    currentPlayerHealth = 1;
+    currentPlayerHealth += damageTaken;
     increasePlayerHealth(currentPlayerHealth);
     bonusLife = 0;
     removeBonusLife();
+    setTimeout(() => {
+      alert("Extra life used");
+    }, 200);
   }
 
   gameLog(
@@ -118,23 +121,31 @@ function healOrDamage(playerAction, playerAttack) {
   console.table(battleLog);
 }
 
-function showLog(){
+function showLog() {
   alert(battleLog);
+}
+
+function reset() {
+  currentMonsterHealth = chosenMaxLife;
+  currentPlayerHealth = chosenMaxLife;
+  bonusLife = 1;
+  addBonusLife();
+  resetGame(chosenMaxLife);
 }
 
 function endGame(currentMonsterHealth, currentPlayerHealth) {
   if (currentMonsterHealth <= 0 && currentPlayerHealth <= 0) {
     battleLog[roundCounter].battleResult = draw;
     showResult("Draw");
-    resetGame(chosenMaxLife);
+    reset();
   } else if (currentPlayerHealth <= 0) {
     battleLog[roundCounter].battleResult = mWins;
     showResult("Monster wins");
-    resetGame(chosenMaxLife);
+    reset();
   } else if (currentMonsterHealth <= 0) {
     battleLog[roundCounter].battleResult = pWins;
     showResult("Player wins");
-    resetGame(chosenMaxLife);
+    reset();
   }
 }
 

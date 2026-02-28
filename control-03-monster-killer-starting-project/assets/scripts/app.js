@@ -50,9 +50,9 @@ function gameLog(
 ) {
   battleLog.push({
     playerHealth: playerHeath,
-    playerAttack: playerAttack,
+    playerAttackDamage: playerAttack,
     playerAction: playerAction,
-    monsterAttack: damageTaken,
+    monsterAttackDamage: damageTaken,
     monsterHealth: monsterHealth,
     battleRounds: roundCounter + 1,
     battleResult: "unknown",
@@ -65,6 +65,7 @@ function showResult(result) {
     alert(result);
   }, 200);
 }
+
 
 function attackHandler() {
   attackMonster(MODE_ATTACK);
@@ -97,6 +98,7 @@ function attackMonster(attackType) {
 
 // Logica principale: calcola i cambiamenti di salute e verifica la fine del gioco
 function healOrDamage(playerAction, playerAttack) {
+  let effectiveHeal = healing;
   if (playerAction === MODE_HEALING) {
     // Verifica per non curarmi con la vita massima
     if (currentPlayerHealth >= inputPlayerHealth) {
@@ -104,7 +106,6 @@ function healOrDamage(playerAction, playerAttack) {
       return;
     }
 
-    let effectiveHeal = healing;
     // Impedisce alla vita del giocatore di superare il limite massimo impostato
     if (currentPlayerHealth + effectiveHeal > inputPlayerHealth) {
       effectiveHeal = inputPlayerHealth - currentPlayerHealth;
@@ -122,6 +123,7 @@ function healOrDamage(playerAction, playerAttack) {
   );
   currentPlayerHealth -= damageTaken;
 
+  // Verifico e uso la vita extra
   if (currentPlayerHealth <= 0 && bonusLife === 1) {
     currentPlayerHealth += damageTaken;
     increasePlayerHealth(currentPlayerHealth);
@@ -139,15 +141,16 @@ function healOrDamage(playerAction, playerAttack) {
     playerAction,
     damageTaken,
   );
+  if (playerAction === MODE_HEALING)
+    battleLog[roundCounter].healValue = effectiveHeal;
 
   endGame(currentMonsterHealth, currentPlayerHealth);
 
   roundCounter++;
-  console.table(battleLog);
 }
 
 function showLog() {
-  alert(battleLog);
+  console.table(battleLog);
 }
 
 function reset() {

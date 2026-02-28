@@ -182,8 +182,12 @@ function healOrDamage(playerAction, playerAttack) {
 }
 
 function showLog() {
-  console.table(battleLog);
-}
+  for (const el of battleLog){
+    for(const key in el){
+      console.log(`${key}: ${el[key]}`);
+
+  }
+}}
 
 function reset() {
   currentMonsterHealth = userMonsterHealth;

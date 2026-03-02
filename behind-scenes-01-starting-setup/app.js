@@ -1,3 +1,9 @@
+ // Possiamo abilitare l'uso di strict mode che disabilita certe cose
+ // come creazione di variabili senza let const e var
+ provaNoVariabile = "non uso let, var , const";
+ console.log(provaNoVariabile);
+ // In questo caso ha effetto solo per il codice dopo, va scritto in alto
+ 'use strict';
 // Le variabili let e const sono block e function scoped
 let myName = "Nico";
 // Ricreare let myName = "Marco" ci darebbe errore qua
@@ -11,9 +17,9 @@ if (mioNome === "Marco") {
 }
 
 function greet() {
-  //L'eta è bloccata nello scope della function
+  // L'eta è bloccata nello scope della function
   let age = 28;
-  //Il var dentro una funzione é bloccato dentro di essa
+  // Il var dentro una funzione é bloccato dentro di essa
   var eta = 30;
   // Creiamo una variabile shadow
   let myName = "Marco";
@@ -22,5 +28,17 @@ function greet() {
 }
 // La variabile var anche se create dentro il blocco if rimane globale invece se creato dentro
 // la funzione rimane bloccato dentro la funzione
-console.log(myName, mioNome, hobbies, eta);
+console.log(
+  `${myName}, ${mioNome}, ${hobbies}, ${typeof eta !== "undefined" ? eta : "non esiste"}`,
+);
 greet();
+// In questo caso non mi da errore perche le var subiscono HOISTING
+// Vengono portate in altro e invisibilmente fa
+// var userName;
+// Quindi mi da undefined
+console.log(userName);
+var userName = "Marco";
+// In questo caso mi da errore perche con let e const vanno
+// sempre dichiarate prima di utilizzarle
+console.log(letUserName);
+let letUserName = "Nico";

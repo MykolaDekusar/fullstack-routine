@@ -25,3 +25,29 @@ console.log(person.name);
 // è diventato oggetto grazie a getElementById ottenuto dall document che è una variabile
 // globale che ci da accesso al documento
 startGameBtn.addEventListener("click", start);
+
+
+// const logEventi = [
+//   { tipo: 'ORDINE', info: 'Margherita' },
+//   { tipo: 'ERRORE', info: 'Forno spento!' },
+//   { tipo: 'ORDINE', info: 'Diavola' },
+//   { tipo: 'ERRORE', info: 'Manca la mozzarella!' }
+// ];
+
+// function analizzaSerata(dati){
+//  outside: for(const arr of dati){
+//     for(const key in arr){
+//      if(arr[key] === "ERRORE"){
+//       if(arr.info === 'Forno spento!'){
+//         console.log(`chiudi tutto: ${arr.info}`);
+//         break outside;
+//       }
+//       console.log(`ATTENZIONE: ${arr.info}`);
+//      }
+//      if(arr[key] === "ORDINE"){
+//       console.log(`Ordine ricevuto: ${arr.info}`);
+//      }
+//     }
+//   }
+// }
+// analizzaSerata(logEventi);

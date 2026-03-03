@@ -4,8 +4,10 @@ function startGame() {
   console.log("Game Started!!!");
 }
 // Possiamo anche assegnare le funzioni a delle variabili pero dovremmo chiamarla
-// per il nome della sua variabile che è start
-const start = function startGame() {
+// per il nome della sua variabile che è start e possiamo omettere il nome della funzione
+// siccome non ha piu importanza e questa diventa una funzione anonima
+const start = function () //startGame
+{
   console.log("Game Started!!!");
 };
 

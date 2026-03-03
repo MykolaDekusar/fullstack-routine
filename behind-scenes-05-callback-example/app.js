@@ -6,6 +6,7 @@ const messageInput = document.getElementById('click-message-input');
 function printMessage() {
   const value = messageInput.value;
   console.log(value || 'Clicked me!');
+  console.log(typeof(() => {}));
 }
 
 function addListener() {

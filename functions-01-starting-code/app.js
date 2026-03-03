@@ -6,11 +6,15 @@ function startGame(){
 
 const person = {
 name: "Nico",
+//Una funzione dentro un oggetto diventa un metodo dell'oggetto
 greet: function (){
   console.log(this.name);
 }
 }
-
+//Una funzione dentro un oggetto diventa un metodo dell'oggetto
 person.greet();
 console.log(person.name);
+// In questo caso addEventListener è un metodo dell'oggetto startGameBtn
+// è diventato oggetto grazie a getElementById ottenuto dall document che è una variabile 
+// globale che ci da accesso al documento
 startGameBtn.addEventListener('click', startGame);

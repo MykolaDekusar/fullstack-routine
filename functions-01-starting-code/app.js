@@ -26,28 +26,13 @@ console.log(person.name);
 // globale che ci da accesso al documento
 startGameBtn.addEventListener("click", start);
 
-
-// const logEventi = [
-//   { tipo: 'ORDINE', info: 'Margherita' },
-//   { tipo: 'ERRORE', info: 'Forno spento!' },
-//   { tipo: 'ORDINE', info: 'Diavola' },
-//   { tipo: 'ERRORE', info: 'Manca la mozzarella!' }
-// ];
-
-// function analizzaSerata(dati){
-//  outside: for(const arr of dati){
-//     for(const key in arr){
-//      if(arr[key] === "ERRORE"){
-//       if(arr.info === 'Forno spento!'){
-//         console.log(`chiudi tutto: ${arr.info}`);
-//         break outside;
-//       }
-//       console.log(`ATTENZIONE: ${arr.info}`);
-//      }
-//      if(arr[key] === "ORDINE"){
-//       console.log(`Ordine ricevuto: ${arr.info}`);
-//      }
-//     }
-//   }
-// }
-// analizzaSerata(logEventi);
+// possiamo scrivere una funzione in 2 modi
+function multiply (a,b) {
+  return a*b;
+}
+// oppure, in questo caso la funzione non viene hoistata in alto, ma solo la variabile
+// che risulta undefined prima dell'assegnazione della funzione
+// é un modo piu safe di scrivere le funzioni se si vogliono dichiarare prima di usarle
+const divide = function (a,b){
+  return a/b;
+}

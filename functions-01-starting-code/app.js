@@ -6,9 +6,9 @@ function startGame() {
 // Possiamo anche assegnare le funzioni a delle variabili pero dovremmo chiamarla
 // per il nome della sua variabile che è start e possiamo omettere il nome della funzione
 // siccome non ha piu importanza e questa diventa una funzione anonima
-const start = function () //startGame
-{
-  console.log("Game Started!!!");
+const start = function () {
+  //startGame
+  console.log("Game Starting...!");
 };
 
 const person = {
@@ -25,14 +25,24 @@ console.log(person.name);
 // è diventato oggetto grazie a getElementById ottenuto dall document che è una variabile
 // globale che ci da accesso al documento
 startGameBtn.addEventListener("click", start);
+// Creiamo una funzione anonima, si usano quando si utilizzano una sola volta
+// senza bisogno di riutilizzarle
+startGameBtn.addEventListener("click", function () {
+  console.log("Game starting from anonymous function...!");
+});
+// possiamo anche assegnare un nome ad una funzione anonima per aiutarci nel debug
+// e possiamo anche passare dei dati
+startGameBtn.addEventListener("click", function anonymousFunction () {
+  console.log("Game starting from anonymous function...!", age);
+});
 
 // possiamo scrivere una funzione in 2 modi
-function multiply (a,b) {
-  return a*b;
+function multiply(a, b) {
+  return a * b;
 }
 // oppure, in questo caso la funzione non viene hoistata in alto, ma solo la variabile
 // che risulta undefined prima dell'assegnazione della funzione
 // é un modo piu safe di scrivere le funzioni se si vogliono dichiarare prima di usarle
-const divide = function (a,b){
-  return a/b;
-}
+const divide = function (a, b) {
+  return a / b;
+};

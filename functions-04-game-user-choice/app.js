@@ -25,22 +25,27 @@ function getComputerChoice() {
   const randomNumber = Math.floor(Math.random() * gameChoices.length);
   return gameChoices[randomNumber];
 }
-
-function gameLogic(player, computer) {
-  if (player === computer) {
-    return DRAW;
-  } else if (
-    (player === ROCK && computer === SCISSORS) ||
+//possiamo utilizzare una arrow function con un operatore ternario per fare la stessa cosa
+//della funzione completa sotto
+const gameLogic = (player,computer) => player === computer ? DRAW : (player === ROCK && computer === SCISSORS) ||
     (player === SCISSORS && computer === PAPER) ||
-    (player === PAPER && computer === ROCK)
-  ) {
-    return PLAYER_WINS;
-  } else {
-    return COMPUTER_WINS;
-  }
-}
+    (player === PAPER && computer === ROCK) ? PLAYER_WINS : COMPUTER_WINS;
 
-startGameBtn.addEventListener("click", function () {
+// function gameLogic(player, computer) {
+//   if (player === computer) {
+//     return DRAW;
+//   } else if (
+//     (player === ROCK && computer === SCISSORS) ||
+//     (player === SCISSORS && computer === PAPER) ||
+//     (player === PAPER && computer === ROCK)
+//   ) {
+//     return PLAYER_WINS;
+//   } else {
+//     return COMPUTER_WINS;
+//   }
+// }
+
+startGameBtn.addEventListener("click", () => {
   if (gameIsRunning) {
     return;
   }

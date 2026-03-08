@@ -2,10 +2,13 @@
 // firstTask.style.backgroundColor = 'black';
 // firstTask.style.color = 'white';
 
-const firstTask2 = document.querySelector('#task-1');
-firstTask2.style.backgroundColor= 'black';
-firstTask2.style.color= 'white';
+const firstTask2 = document.querySelector("#task-1");
+firstTask2.style.backgroundColor = "black";
+firstTask2.style.color = "white";
 
-const secondTask = document.querySelector('title');
+const secondTask = document.querySelector("title");
 // secondTask.innerText = 'Assignmnet - Solved!';
-document.title = "Assignmnet - Solved!"
+document.title = "Assignmnet - Solved!";
+
+const thirdTask = document.querySelector("h1");
+thirdTask.innerText = "Assignmnet - Solved!";

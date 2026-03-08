@@ -5,3 +5,7 @@
 const firstTask2 = document.querySelector('#task-1');
 firstTask2.style.backgroundColor= 'black';
 firstTask2.style.color= 'white';
+
+const secondTask = document.querySelector('title');
+// secondTask.innerText = 'Assignmnet - Solved!';
+document.title = "Assignmnet - Solved!"

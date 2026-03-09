@@ -52,3 +52,8 @@ unList.append("Ecco che uso append", " Sono sempre io", newListElement);
 unList.prepend("Sto usando prepend");
 // Abbiamo anche .before e .after e .replace per posizionare prima, dopo o sostituire
 // l'elemento selezionato
+
+// Se volessimo copiare un elemento possiamo usare il .cloneNode che copia tutte le caratteristiche
+// ma ne crea uno nuovo
+const unListClone = newListElement.cloneNode(true);
+unList.append(unListClone);

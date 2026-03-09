@@ -46,3 +46,5 @@ newListElement.textContent = 'Sono un nuovo elemento';
 newListElement.style.backgroundColor = "red";
 // e ovviamente dopo tutte le modifiche possiamo aggiungerlo a ul
 unList.appendChild(newListElement);
+// Esiste anche .append
+unList.append('Ecco che uso append', ' Sono sempre io');

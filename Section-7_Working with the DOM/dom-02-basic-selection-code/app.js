@@ -62,3 +62,9 @@ unList.append(unListClone);
 // che se aggiungiamo un qualcosa a quella lista array la lista si aggiorna in tempo reale
 // Invece querySelector ci da un oggetto array con uno snapshot della lista
 // Non si aggiorna in tempo reale se andiamo a modificare la lista aggiungendo o togliendo elementi da essa
+
+// Ora vediamo come rimuovere un elemento con .remove e removeChild
+unList.lastChild.remove();
+// In questo caso dobbiamo passare l'elemento che vogliamo rimuovere
+
+unList.removeChild(unListClone);

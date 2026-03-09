@@ -36,3 +36,13 @@ lastLiEl.textContent += "ho aggiunto questo!";
 
 // Ora vediamo come aggiungere elementi HTML tramite javascript
 const section = document.querySelector("section");
+
+// Prova con createElement()
+// Si usa sempre sul document riceve come primo valore il tag li, p, div etc...
+const unList = document.querySelector('ul');
+const newListElement = document.createElement('li');
+// Una volta creato l'elemento possiamo inserirci il testo dentro o lo stile
+newListElement.textContent = 'Sono un nuovo elemento';
+newListElement.style.backgroundColor = "red";
+// e ovviamente dopo tutte le modifiche possiamo aggiungerlo a ul
+unList.appendChild(newListElement);

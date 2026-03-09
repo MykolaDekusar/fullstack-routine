@@ -39,14 +39,16 @@ const section = document.querySelector("section");
 
 // Prova con createElement()
 // Si usa sempre sul document riceve come primo valore il tag li, p, div etc...
-const unList = document.querySelector('ul');
-const newListElement = document.createElement('li');
+const unList = document.querySelector("ul");
+const newListElement = document.createElement("li");
 // Una volta creato l'elemento possiamo inserirci il testo dentro o lo stile
-newListElement.textContent = 'Sono un nuovo elemento';
+newListElement.textContent = "Sono un nuovo elemento";
 newListElement.style.backgroundColor = "red";
 // e ovviamente dopo tutte le modifiche possiamo aggiungerlo a ul
 unList.appendChild(newListElement);
-// Esiste anche .append
-unList.append('Ecco che uso append', ' Sono sempre io');
+// Esiste anche .append, possiamo appendere piu cose separate da una virgola
+unList.append("Ecco che uso append", " Sono sempre io", newListElement);
 // Oppure .prepend facendo cosi salgo in cima alla lista ma non ne faccio parte
 unList.prepend("Sto usando prepend");
+// Abbiamo anche .before e .after e .replace per posizionare prima, dopo o sostituire
+// l'elemento selezionato

@@ -48,3 +48,5 @@ newListElement.style.backgroundColor = "red";
 unList.appendChild(newListElement);
 // Esiste anche .append
 unList.append('Ecco che uso append', ' Sono sempre io');
+// Oppure .prepend facendo cosi salgo in cima alla lista ma non ne faccio parte
+unList.prepend("Sto usando prepend");

@@ -17,16 +17,22 @@ for (const listEl of lElements) {
 
 // Possiamo selezionare un unico elemento basandoci sul suo ID
 const title = document.getElementById("main-title");
+document.title = "Dive into the DOM!";
+
 // E possiamo modificare il so contenuto con
 title.innerText = "Nuovo titolo";
+// Oppure con pero innerHTML distrugge tutto il codice interno
+title.innerHTML = "<h2>Ho <em>usato</em> <span>innerHTML</span></h2>";
 // Cambiare il suo stile con
 title.style.color = "red";
 title.style.backgroundColor = "black";
 
-
 // Se volessimo selezionare solo un elemento della lista per esempio l'ultimo
-const lastLiEl = document.querySelector('li:last-of-type');
+const lastLiEl = document.querySelector("li:last-of-type");
 // e possiamo modificarlo
 lastLiEl.innerText = "Sono stato modificato";
 // possiamo anche fare concatenazioni
-lastLiEl.textContent +=  "ho aggiunto questo!";
+lastLiEl.textContent += "ho aggiunto questo!";
+
+// Ora vediamo come aggiungere elementi HTML tramite javascript
+const section = document.querySelector("section");

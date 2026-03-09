@@ -57,3 +57,8 @@ unList.prepend("Sto usando prepend");
 // ma ne crea uno nuovo
 const unListClone = newListElement.cloneNode(true);
 unList.append(unListClone);
+
+// getElementsBy ci da sempre un oggetto array con una lista live... Nel senso
+// che se aggiungiamo un qualcosa a quella lista array la lista si aggiorna in tempo reale
+// Invece querySelector ci da un oggetto array con uno snapshot della lista
+// Non si aggiorna in tempo reale se andiamo a modificare la lista aggiungendo o togliendo elementi da essa

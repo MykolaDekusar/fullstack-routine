@@ -13,6 +13,7 @@ const movieList = [];
 cancelModal.addEventListener("click", () => {
   toggleModal();
   showBackDrop();
+  clearUserInput();
 });
 
 addMoviebutton.addEventListener("click", () => {
@@ -21,6 +22,7 @@ addMoviebutton.addEventListener("click", () => {
 });
 
 backDrop.addEventListener("click", () => {
+  clearUserInput();
   toggleModal();
   showBackDrop();
 });
@@ -41,15 +43,21 @@ function addMovie() {
   const movieTitle = userInputs[0].value;
   const movieImage = userInputs[1].value;
   const movieRating = userInputs[2].value;
-  console.log(+movieRating >= 1 && +movieRating <= 5);
+
   if (movieTitle && movieImage && (+movieRating >= 1 && +movieRating <= 5)) {
     movieList.push({ movieTitle, movieImage, movieRating });
     alert("Il film è stato aggiunto con successo!");
-    console.log(movieList[0]);
     toggleModal();
     showBackDrop();
   } else {
     alert("Inserisci valori validi, il rating deve essere tra 1 e 5");
     return;
+  }
+}
+
+
+function clearUserInput(){
+  for(const userInput of userInputs){
+    userInput.value = '';
   }
 }

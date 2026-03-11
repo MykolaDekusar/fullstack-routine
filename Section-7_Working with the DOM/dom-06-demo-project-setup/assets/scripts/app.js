@@ -41,16 +41,17 @@ function toggleModal() {
 }
 // Logic for user input validation and storage
 function addMovie() {
+  const movieId = Math.random().toString();
   const movieTitle = userInputs[0].value;
   const movieImage = userInputs[1].value;
   const movieRating = userInputs[2].value;
 
   if (movieTitle && movieImage && +movieRating >= 1 && +movieRating <= 5) {
-    movieList.push({ movieTitle, movieImage, movieRating });
+    movieList.push({ movieId, movieTitle, movieImage, movieRating });
     alert("Il film è stato aggiunto con successo!");
     toggleModal();
     showBackDrop();
-    createMovieCard(movieTitle, movieImage, movieRating);
+    createMovieCard(movieId, movieTitle, movieImage, movieRating);
   } else {
     alert("Inserisci valori validi, il rating deve essere tra 1 e 5");
     return;
@@ -63,10 +64,14 @@ function clearUserInput() {
   }
 }
 
-function createMovieCard(title, image, rating) {
+function createMovieCard(id, title, image, rating) {
   if (movieList.length) {
     movieSection.classList.add("hide");
     const newMovieElement = document.createElement("li");
+    newMovieElement.addEventListener(
+      "click",
+      deleteMovieHandler.bind(null, id),
+    );
     newMovieElement.className = "movie-element";
     newMovieElement.innerHTML = `
     <div class='movie-element__info'>
@@ -77,5 +82,19 @@ function createMovieCard(title, image, rating) {
       <img src = '${image}' alt = '${title}'>
     </div>`;
     addMovieToList.appendChild(newMovieElement);
+  } else movieSection.classList.remove("hide");
+}
+
+function deleteMovieHandler(movieId) {
+  let movieIndex = 0;
+  for (const movie of movieList) {
+    if (movie.movieId === movieId) {
+      break;
+    }
+    movieIndex++;
   }
+  // Con lo splice togliamo 1 elemento dall'array
+  movieList.splice(movieIndex, 1);
+  //addMovieToList.children[movieIndex].remove();
+  addMovieToList.removeChild(addMovieToList.children[movieIndex]);
 }

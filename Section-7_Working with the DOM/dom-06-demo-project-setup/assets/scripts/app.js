@@ -85,7 +85,7 @@ function createMovieCard(id, title, image, rating) {
   } else movieSection.classList.remove("hide");
 }
 
-function deleteMovieHandler(movieId) {
+function deleteMovie(movieId) {
   let movieIndex = 0;
   for (const movie of movieList) {
     if (movie.movieId === movieId) {
@@ -93,8 +93,48 @@ function deleteMovieHandler(movieId) {
     }
     movieIndex++;
   }
-  // Con lo splice togliamo 1 elemento dall'array
+
+  // Rimuovi dall'array
   movieList.splice(movieIndex, 1);
-  //addMovieToList.children[movieIndex].remove();
-  addMovieToList.removeChild(addMovieToList.children[movieIndex]);
+  
+  // Rimuovi dal DOM in modo sicuro
+  const listRoot = document.getElementById("movie-list");
+  listRoot.children[movieIndex].remove();
+
+  // Se non ci sono più film, mostra il testo iniziale
+  if (movieList.length === 0) {
+    movieSection.classList.remove("hide");
+  }
+
+  toggleConfirmationModal();
+}
+
+function deleteMovieHandler(movieId) {
+  toggleConfirmationModal();
+  showBackDrop(); // Ricordati di mostrare il backdrop se vuoi bloccare lo schermo
+
+  const cancel = document.querySelector("#delete-modal .btn--passive");
+  let confirm = document.querySelector("#delete-modal .btn--danger");
+
+  // Rimuoviamo i vecchi listener clonando il bottone
+  const newConfirm = confirm.cloneNode(true);
+  confirm.replaceWith(newConfirm);
+  confirm = newConfirm; // riassegniamo la variabile al nuovo bottone pulito
+
+  // Chiudi il modal se clicchi cancel
+  cancel.onclick = () => {
+    toggleConfirmationModal();
+    showBackDrop();
+  };
+
+  // Esegui l'eliminazione solo al click sul NUOVO bottone confirm
+  confirm.addEventListener('click', () => {
+    deleteMovie(movieId);
+    showBackDrop(); // Nascondi backdrop dopo eliminazione
+  });
+}
+
+function toggleConfirmationModal(){
+const deleteConfirmation = document.querySelector("#delete-modal");
+deleteConfirmation.classList.toggle("visible");
 }

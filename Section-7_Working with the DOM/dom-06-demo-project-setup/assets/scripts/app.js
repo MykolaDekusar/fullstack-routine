@@ -10,28 +10,6 @@ const userInputs = modal.querySelectorAll("input");
 
 const movieList = [];
 
-// Logic of showing and removing modal and backdrop
-cancelModal.addEventListener("click", () => {
-  toggleModal();
-  showBackDrop();
-  clearUserInput();
-});
-
-addMoviebutton.addEventListener("click", () => {
-  toggleModal();
-  showBackDrop();
-});
-
-backDrop.addEventListener("click", () => {
-  clearUserInput();
-  toggleModal();
-  showBackDrop();
-});
-
-addButton.addEventListener("click", () => {
-  addMovie();
-});
-
 function showBackDrop() {
   backDrop.classList.toggle("visible");
 }
@@ -96,7 +74,7 @@ function deleteMovie(movieId) {
 
   // Rimuovi dall'array
   movieList.splice(movieIndex, 1);
-  
+
   // Rimuovi dal DOM in modo sicuro
   const listRoot = document.getElementById("movie-list");
   listRoot.children[movieIndex].remove();
@@ -111,7 +89,7 @@ function deleteMovie(movieId) {
 
 function deleteMovieHandler(movieId) {
   toggleConfirmationModal();
-  showBackDrop(); // Ricordati di mostrare il backdrop se vuoi bloccare lo schermo
+  showBackDrop();
 
   const cancel = document.querySelector("#delete-modal .btn--passive");
   let confirm = document.querySelector("#delete-modal .btn--danger");
@@ -128,13 +106,39 @@ function deleteMovieHandler(movieId) {
   };
 
   // Esegui l'eliminazione solo al click sul NUOVO bottone confirm
-  confirm.addEventListener('click', () => {
+  confirm.addEventListener("click", () => {
     deleteMovie(movieId);
     showBackDrop(); // Nascondi backdrop dopo eliminazione
   });
 }
 
-function toggleConfirmationModal(){
-const deleteConfirmation = document.querySelector("#delete-modal");
-deleteConfirmation.classList.toggle("visible");
+function toggleConfirmationModal() {
+  const deleteConfirmation = document.querySelector("#delete-modal");
+  deleteConfirmation.classList.toggle("visible");
 }
+
+function closeAllModals(){
+  modal.classList.remove("visible"); // Chiude il modal "Aggiungi"
+  const deleteConfirmation = document.querySelector("#delete-modal");
+  deleteConfirmation.classList.remove("visible"); // Chiude il modal "Elimina"
+  backDrop.classList.remove("visible"); // Nasconde il backdrop
+  clearUserInput(); // Pulisce i campi (non fa mai male)
+};
+
+// Logic of showing and removing modal and backdrop
+cancelModal.addEventListener("click", () => {
+  toggleModal();
+  showBackDrop();
+  clearUserInput();
+});
+
+addMoviebutton.addEventListener("click", () => {
+  toggleModal();
+  showBackDrop();
+});
+
+backDrop.addEventListener("click", closeAllModals);
+
+addButton.addEventListener("click", () => {
+  addMovie();
+});

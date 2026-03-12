@@ -63,30 +63,6 @@ function createMovieCard(id, title, image, rating) {
   } else movieSection.classList.remove("hide");
 }
 
-function deleteMovie(movieId) {
-  let movieIndex = 0;
-  for (const movie of movieList) {
-    if (movie.movieId === movieId) {
-      break;
-    }
-    movieIndex++;
-  }
-
-  // Rimuovi dall'array
-  movieList.splice(movieIndex, 1);
-
-  // Rimuovi dal DOM in modo sicuro
-  const listRoot = document.getElementById("movie-list");
-  listRoot.children[movieIndex].remove();
-
-  // Se non ci sono più film, mostra il testo iniziale
-  if (movieList.length === 0) {
-    movieSection.classList.remove("hide");
-  }
-
-  toggleConfirmationModal();
-}
-
 function deleteMovieHandler(movieId) {
   toggleConfirmationModal();
   showBackDrop();
@@ -110,6 +86,30 @@ function deleteMovieHandler(movieId) {
     deleteMovie(movieId);
     showBackDrop(); // Nascondi backdrop dopo eliminazione
   });
+}
+
+function deleteMovie(movieId) {
+  let movieIndex = 0;
+  for (const movie of movieList) {
+    if (movie.movieId === movieId) {
+      break;
+    }
+    movieIndex++;
+  }
+
+  // Rimuovi dall'array
+  movieList.splice(movieIndex, 1);
+
+  // Rimuovi dal DOM in modo sicuro
+  const listRoot = document.getElementById("movie-list");
+  listRoot.children[movieIndex].remove();
+
+  // Se non ci sono più film, mostra il testo iniziale
+  if (movieList.length === 0) {
+    movieSection.classList.remove("hide");
+  }
+
+  toggleConfirmationModal();
 }
 
 function toggleConfirmationModal() {

@@ -50,13 +50,34 @@ const ages = [30, 23, 28, 50];
 ages.push(99); // Aggiunge 99 alla fine dell'array e ritorna la nuova lunghezza dell'array
 ages.unshift(0); // Aggiunge 0 all'inizio dell'array e ritorna la nuova lunghezza dell'array
 console.log(ages);
+
 const poppedValue = ages.pop(); // Rimuove l'ultimo elemento dall'array, possiamo anche salvare il valore
 const shiftedValue = ages.shift(); // Rimuove il primo elemento dall'array, possiamo anche salvare il valore
 console.log(ages, poppedValue, shiftedValue);
+
 // Unshift e shift sono molto piu lenti perchè affliggono tutto l'array spostando gli elementi di 1 posto
 //Ovviamente possiamo anche modificare l'array accendendo direttamente all'indice
 ages[1] = 0;
 console.log(ages);
+
 //Possiamo anche assegnare valori a indici che non esistono pero tutti gli indici prima saranno vuoti
 ages[10] = 99;
 console.log(ages); //[ 30, 0, 28, 50, <6 empty slots>,99]
+
+// Vediamo cosa fa il .splice il primo valore é l'indice di partenza, il secondo è quanti elementi vuoi eliminare
+// e il terzo sono gli elementi che vuoi inserire
+// Lo usiamo per inserire elementi o eliminarli in posizioni specifiche
+ages.splice(0, 0, 123);
+console.log(ages); //[ 123, 30, 0, 28, 50, <5 empty slots>, … ]
+// Se volessimo inserire per esempio al terzo posto (0, 1, 2) dobbiamo dire indice 2
+ages.splice(2, 0 , 123);
+console.log(ages); //[ 123, 30, 123, 0, 28, 50, <4 empty slots>, … ]
+// Vediamo come eliminare
+// Splice ci ritorna anche un array di elementi eliminati
+const deletedBySplice = ages.splice(0,3); // [ 123, 30, 123 ]
+// Ci elimina 123
+console.log(ages, deletedBySplice); // [ 0, 28, 50, <6 empty slots>, 99 ]
+// Il splice puo anche ricevere valori negativi e parte dal fondo
+const lastRemovedElement = ages.splice(-1, 1);
+console.log(ages, lastRemovedElement);// [ 0, 28, 50, <6 empty slots> ], [ 99 ]
+ 

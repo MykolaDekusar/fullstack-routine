@@ -29,3 +29,9 @@ console.log(listItems);
 const arrayListItems= Array.from(listItems); //Lo trasformiamo in array permettendoci di usare i metodi per gli array
 console.log(arrayListItems);
 
+// Gli array possono contenere, numeri, stringe o anche oggetti tutti nello stesso array
+const ages = [30,23,28,50];
+const hobbies = ["Gaming","Reading","Coding"];
+// Possiamo avere un mix di dati
+const mixed = [30,"Gaming", {name : "Nico", age: 28, hobbies: ["running", "swimming"]}, [1,2,3,4,5]]
+

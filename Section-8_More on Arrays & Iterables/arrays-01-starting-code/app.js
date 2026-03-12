@@ -30,7 +30,7 @@ const arrayListItems = Array.from(listItems); //Lo trasformiamo in array permett
 console.log(arrayListItems);
 
 // Gli array possono contenere, numeri, stringe o anche oggetti tutti nello stesso array
-const ages = [30, 23, 28, 50];
+
 const hobbies = ["Gaming", "Reading", "Coding"];
 // Possiamo avere un mix di dati
 const mixed = [
@@ -46,9 +46,17 @@ const twoDData = [
 ];
 
 // Vediamo dei metodi che possiamo applicare agli array
+const ages = [30, 23, 28, 50];
 ages.push(99); // Aggiunge 99 alla fine dell'array e ritorna la nuova lunghezza dell'array
 ages.unshift(0); // Aggiunge 0 all'inizio dell'array e ritorna la nuova lunghezza dell'array
 console.log(ages);
 const poppedValue = ages.pop(); // Rimuove l'ultimo elemento dall'array, possiamo anche salvare il valore
 const shiftedValue = ages.shift(); // Rimuove il primo elemento dall'array, possiamo anche salvare il valore
 console.log(ages, poppedValue, shiftedValue);
+// Unshift e shift sono molto piu lenti perchè affliggono tutto l'array spostando gli elementi di 1 posto
+//Ovviamente possiamo anche modificare l'array accendendo direttamente all'indice
+ages[1] = 0;
+console.log(ages);
+//Possiamo anche assegnare valori a indici che non esistono pero tutti gli indici prima saranno vuoti
+ages[10] = 99;
+console.log(ages); //[ 30, 0, 28, 50, <6 empty slots>,99]

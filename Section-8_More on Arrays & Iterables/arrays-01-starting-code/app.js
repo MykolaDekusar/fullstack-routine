@@ -128,3 +128,5 @@ console.log(newNoReferenceConcatArray.indexOf(32)); // index 3 [ 1, 5.2, 123.5, 
 console.log(newNoReferenceConcatArray.lastIndexOf(32)); // index 3
 
 // Questi metodi funzionano bene per i valori PRIMITIVI MA NON PER QUELLI REFERENCE
+const personData = [{name: "Nico"}, {name: "Max"}];
+console.log(personData.indexOf("Nico")); // Ci ritorna -1 se non riesce a trovare l'elemento

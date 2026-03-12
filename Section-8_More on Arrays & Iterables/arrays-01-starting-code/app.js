@@ -153,3 +153,10 @@ const max = personData.findIndex((person, indx, persons) => {
 });
 
 console.log(max); // Index 1
+
+//***********************************************************
+// Un altro metodo per vedere se un array contine l'elemento che vogliamo è includes
+console.log(testResults.includes(32)); //true
+console.log(testResults.includes(312)); //false
+
+

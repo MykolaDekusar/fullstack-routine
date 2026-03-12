@@ -115,18 +115,41 @@ console.log(slicedFromIndex); //[ 123.5, 32 ]
 const newNoReferenceConcatArray = testResults.concat([111, 112, 113]);
 console.log(newNoReferenceConcatArray); // [ 1, 5.2, 123.5, 32, 111, 112, 113 ]
 
-
 //***********************************************************
 // VEDIAMO I MODI PER TROVARE L'INDICE DEGLI ELEMENTI CHE VOGLIAMO CERCARE
 // indexOf ci ritorna l'indice dell'elemento che vogliamo cercare
 // SI FERMA AL PRIMO VALORE TROVATO ANCHE SE CI SONO PIU VALORI UGUALI NELL'ARRAY
 console.log(newNoReferenceConcatArray.indexOf(32)); // index 3 [ 1, 5.2, 123.5, 32, 111, 112, 113 ]
-                                                    //           0,  1,   2,     3
+//           0,  1,   2,     3
 
-//***********************************************************                                                
+//***********************************************************
 // Possiamo partire dal fondo usando lastIndexOf
 console.log(newNoReferenceConcatArray.lastIndexOf(32)); // index 3
 
 // Questi metodi funzionano bene per i valori PRIMITIVI MA NON PER QUELLI REFERENCE
-const personData = [{name: "Nico"}, {name: "Max"}];
+const personData = [{ name: "Nico" }, { name: "Max" }];
 console.log(personData.indexOf("Nico")); // Ci ritorna -1 se non riesce a trovare l'elemento
+
+//***********************************************************
+// Per gli oggetti o anche gli array possiamo usare find
+// richiede fino a 3 argomenti... Il primo è un singolo oggetto dell'array, il secondo è sempre l'indice
+// il terzo è l'array completo dopodichè esegue una funzione anonima che effettua la ricerca per ogni oggetto
+// dentro l'array e ci ritorna quello che decidiamo
+const nico = personData.find((person, indx, persons) => {
+  return person.name === "Nico"; //Tipicamente ritorna una comparazione che è un boolean
+});
+// come l'indexOf si ferma al primo elemento trovato e ci ritorna l'elemento
+console.log(nico); // { name: "Nico" }
+
+// FIND NON CREA UNA COPIA, QUINDI SE MODIFICHIAMO IL DATO DENTRO NICO LO MODIFICHIAMO ANCHE NELL' ARRAY ORIGINALE
+nico.name = "Marco";
+console.log(nico, personData); // { name: "Marco" } [ ​{ name: "Marco" },​{ name: "Max" }]
+
+//***********************************************************
+// Abbiamo anche findIndex che ci ritorna l'indice dell'elemento trovato
+
+const max = personData.findIndex((person, indx, persons) => {
+  return person.name === "Max"; //Tipicamente ritorna una comparazione che è un boolean
+});
+
+console.log(max); // Index 1

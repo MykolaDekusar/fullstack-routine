@@ -69,15 +69,38 @@ console.log(ages); //[ 30, 0, 28, 50, <6 empty slots>,99]
 // Lo usiamo per inserire elementi o eliminarli in posizioni specifiche
 ages.splice(0, 0, 123);
 console.log(ages); //[ 123, 30, 0, 28, 50, <5 empty slots>, … ]
+
 // Se volessimo inserire per esempio al terzo posto (0, 1, 2) dobbiamo dire indice 2
-ages.splice(2, 0 , 123);
+ages.splice(2, 0, 123);
 console.log(ages); //[ 123, 30, 123, 0, 28, 50, <4 empty slots>, … ]
+
 // Vediamo come eliminare
 // Splice ci ritorna anche un array di elementi eliminati
-const deletedBySplice = ages.splice(0,3); // [ 123, 30, 123 ]
+const deletedBySplice = ages.splice(0, 3); // [ 123, 30, 123 ]
 // Ci elimina 123
 console.log(ages, deletedBySplice); // [ 0, 28, 50, <6 empty slots>, 99 ]
+
 // Il splice puo anche ricevere valori negativi e parte dal fondo
 const lastRemovedElement = ages.splice(-1, 1);
-console.log(ages, lastRemovedElement);// [ 0, 28, 50, <6 empty slots> ], [ 99 ]
- 
+console.log(ages, lastRemovedElement); // [ 0, 28, 50, <6 empty slots> ], [ 99 ]
+
+// Vediamo il metodo slice
+const testResults = [1, 5.2, 123.5, 32];
+const referenceCopy = testResults;
+// Se lo usiamo in questo modo ci permette di copiare l'array evitando la reference value
+// Creando un nuovo spazio in memoria per il nuovo array copiato quindi non hanno connessione in memoria
+const testResultsCopy = testResults.slice();
+console.log(testResultsCopy === testResults); //false
+console.log(testResults === referenceCopy); // true perche hanno la stessa posizione in memoria
+
+// Slice ci permette di prendere pezzi dell'array, specificando l'inizio e la fine del pezzo che vogliamo'
+const slicedTestResult = testResults.slice(0,2);
+console.log(slicedTestResult); // [ 1, 5.2 ]
+
+// Possiamo anche usare gli indici negativi pero entrambi devono essere negativi
+const slicedFromEnd = testResults.slice(-3, -1);
+console.log(slicedFromEnd); //[ 5.2, 123.5 ]
+
+// Ovviamente possiamo anche dirgli solo la posizione da quale partire e ci rida tutto il resto dell'array
+const slicedFromIndex = testResults.slice(2);
+console.log(slicedFromIndex); //[ 123.5, 32 ]

@@ -201,11 +201,21 @@ const badExample = taxedPrices.sort(); // Sort trasfroma i numeri in array e com
 console.log(badExample); // [ 13.440000000000001, 25.76, 3.3600000000000003, 461.44000000000005 ]
 // Come possiamo vedere non sono ordinati...
 const goodExample = taxedPrices.sort((a, b) => {
-  if (a > b) return 1; // oppure basta ritornare -1 qua 
+  if (a > b)
+    return 1; // oppure basta ritornare -1 qua
   else if (a === b) return 0;
   else return -1; // e +1 qua per fare la stessa cosa di reverse()
 });
-console.log(goodExample);//[ 3.3600000000000003, 13.440000000000001, 25.76, 461.44000000000005 ]
+console.log(goodExample); //[ 3.3600000000000003, 13.440000000000001, 25.76, 461.44000000000005 ]
 
 const reversedGoodExample = goodExample.reverse();
 console.log(reversedGoodExample); //[ 461.44000000000005, 25.76, 13.440000000000001, 3.3600000000000003 ]
+
+//***********************************************************
+// Per filtrare elementi di un array secondo le nostre necessita abbiamo il metodo filter()
+// Ritorna un array nuovo senza toccare quello originale
+// Anche esso prende fino a 3 argomenti
+const filteredHeights = height.filter((height, index, heightArray) => {
+  return height > 180;// se è true lo mette nel nuovo array, altrimenti lo scarta
+});
+console.log(filteredHeights);

@@ -164,18 +164,32 @@ console.log(testResults.includes(312)); //false
 
 const prices = [12, 3, 23, 412];
 const tax = 0.12;
-const taxedPrices= [];
+const taxedPrices = [];
 //se volessimo applicare la tassa ai prices potremmo usare il for of
-for(const price of prices){
-  taxedPrices.push(price*(1+tax));
-};
+for (const price of prices) {
+  taxedPrices.push(price * (1 + tax));
+}
 
-// OPPURE prende anche esso fino a 3 elementi 
+// OPPURE prende anche esso fino a 3 elementi
 // in questo caso il singolo elemento, l'id, l'array (puo avere lo stesso nome tanto succede lo shadowing)
 const pricesData = [];
 prices.forEach((price, id, prices) => {
   //a differenza del for of possiamo anche ottenere l'index
-  const priceObj = {index: id, taxedPrice: price * (1+tax), originalPrice: price};
+  const priceObj = {
+    index: id,
+    taxedPrice: price * (1 + tax),
+    originalPrice: price,
+  };
   pricesData.push(priceObj);
-})
-console.log(pricesData); //[ { index: 0, taxedPrice: 13.440000000000001, originalPrice: 12 }, {…}, {…}, {…} ] 
+});
+console.log(pricesData); //[ { index: 0, taxedPrice: 13.440000000000001, originalPrice: 12 }, {…}, {…}, {…} ]
+
+//***********************************************************
+// Vediamo il map()
+// Se dobbiamo modificare l'array mantenendo i dati originali invariati usiamo map
+
+const height = [182, 178, 158, 198];
+const morningHeight = height.map((height, id, heightArray) => {
+  return height + 2; // A differenza di forEach map() richiede un return
+});
+console.log(height, morningHeight); //Array(4) [ 182, 178, 158, 198 ] Array(4) [ 184, 180, 160, 200]

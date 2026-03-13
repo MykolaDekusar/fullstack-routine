@@ -251,3 +251,19 @@ const nameFragments = ["Nico", "Deku", 97];
 const joinedName = nameFragments.join(' '); // Di default unisce con la , possiamo dirgli noi che separatore usare
 console.log(joinedName); //Nico Deku 97
 
+//***********************************************************
+// Abbiamo lo spread operator ...
+const nuovoArray = ['ciao', 'come', 'va'];
+const nuovoArrayCopiato = [...nuovoArray];
+console.log(nuovoArray,nuovoArrayCopiato);// [ "ciao", "come", "va" ] [ "ciao", "come", "va" ]
+
+// Nel caso degli oggetti anche se copiamo l'array pero il valore in memoria risulta uguale
+// Quindi anche andando a modificare i dati dell'oggetto primario i dati nell'oggetto secondario 
+// Cambiano
+
+const objArray = [{nome: 'Nico', eta: 28}, {nome: 'Radu', eta: 35}];
+const copiedObjArray = [...objArray];
+objArray[1].eta = 25;
+console.log(objArray, copiedObjArray) // Cambia anche copiedObjArray perche andiamo a toccare l'oggetto primario che é un valore di reference
+
+

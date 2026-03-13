@@ -232,9 +232,22 @@ console.log(shorteredFilteredHeights); //[ 182.3, 181.4 ]
 const shoppingCart = [23, 53, 29, 50, 123];
 // Con il reduce possiamo fare la somma di questo array senza fare i cicli for
 const totalShoppingCartPrice = shoppingCart.reduce(
-  (previous, current, index, shoppingCart) => {
-    return previous + current;
-  },
-  0, // valore iniziale FONDAMENTALE.... con 100 la somma sarebbe stata 378
-);
+  // anche questo prende 4 argomenti per il primo (previous, current, index, shoppingCart)
+  (previous, current) => previous + current,
+  0,
+); // valore iniziale FONDAMENTALE.... con 100 la somma sarebbe stata 378
+
 console.log(totalShoppingCartPrice); //278
+
+//***********************************************************
+// Abbiamo dei metodi per tagliare una stringa in array usando split()
+const data = 'italia;   21,52;2026';
+// Se voglio separare in array questa tringa so che il separatore è ;
+const transformedData = data.split(';'/*qua posso passare il limite di lunghezza*/);
+console.log(transformedData); //[ "italia", "   21,52", "2026" ]
+
+// Per unire elementi di un array in una string usiamo il metodo join()
+const nameFragments = ["Nico", "Deku", 97];
+const joinedName = nameFragments.join(' '); // Di default unisce con la , possiamo dirgli noi che separatore usare
+console.log(joinedName); //Nico Deku 97
+

@@ -159,4 +159,23 @@ console.log(max); // Index 1
 console.log(testResults.includes(32)); //true
 console.log(testResults.includes(312)); //false
 
+//***********************************************************
+// Vediamo il forEach()
 
+const prices = [12, 3, 23, 412];
+const tax = 0.12;
+const taxedPrices= [];
+//se volessimo applicare la tassa ai prices potremmo usare il for of
+for(const price of prices){
+  taxedPrices.push(price*(1+tax));
+};
+
+// OPPURE prende anche esso fino a 3 elementi 
+// in questo caso il singolo elemento, l'id, l'array (puo avere lo stesso nome tanto succede lo shadowing)
+const pricesData = [];
+prices.forEach((price, id, prices) => {
+  //a differenza del for of possiamo anche ottenere l'index
+  const priceObj = {index: id, taxedPrice: price * (1+tax), originalPrice: price};
+  pricesData.push(priceObj);
+})
+console.log(pricesData); //[ { index: 0, taxedPrice: 13.440000000000001, originalPrice: 12 }, {…}, {…}, {…} ] 

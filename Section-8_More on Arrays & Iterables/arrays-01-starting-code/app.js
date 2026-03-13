@@ -216,10 +216,25 @@ console.log(reversedGoodExample); //[ 461.44000000000005, 25.76, 13.440000000000
 // Ritorna un array nuovo senza toccare quello originale
 // Anche esso prende fino a 3 argomenti
 const filteredHeights = height.filter((height, index, heightArray) => {
-  return height > 180;// se è true lo mette nel nuovo array, altrimenti lo scarta
+  return height > 180; // se è true lo mette nel nuovo array, altrimenti lo scarta
 });
-console.log(filteredHeights);  // [ 182.3, 181.4 ]
+console.log(filteredHeights); // [ 182.3, 181.4 ]
 
 // Vediamo come possiamo accorciare questo codice grazie alla funzione anonima'
-const shorteredFilteredHeights = height.filter(number => number > 180);
+const shorteredFilteredHeights = height.filter((number) => number > 180);
 console.log(shorteredFilteredHeights); //[ 182.3, 181.4 ]
+
+//***********************************************************
+// Vediamo il reduce()
+// Il reduce riduce un array in un qualcosa di piu semplice
+// Per esempio un array di numeri (un carrello della spesa) in un totale
+
+const shoppingCart = [23, 53, 29, 50, 123];
+// Con il reduce possiamo fare la somma di questo array senza fare i cicli for
+const totalShoppingCartPrice = shoppingCart.reduce(
+  (previous, current, index, shoppingCart) => {
+    return previous + current;
+  },
+  0, // valore iniziale FONDAMENTALE.... con 100 la somma sarebbe stata 378
+);
+console.log(totalShoppingCartPrice); //278

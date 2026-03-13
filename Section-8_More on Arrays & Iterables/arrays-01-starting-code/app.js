@@ -265,5 +265,27 @@ const objArray = [{nome: 'Nico', eta: 28}, {nome: 'Radu', eta: 35}];
 const copiedObjArray = [...objArray];
 objArray[1].eta = 25;
 console.log(objArray, copiedObjArray) // Cambia anche copiedObjArray perche andiamo a toccare l'oggetto primario che é un valore di reference
+/*
+Array [ {…}, {…} ]
+0: Object { nome: "Nico", eta: 28 }
+1: Object { nome: "Radu", eta: 25 }
+length: 2
+​
+Array [ {…}, {…} ]
+0: Object { nome: "Nico", eta: 28 }
+1: Object { nome: "Radu", eta: 25 }
+length: 2
 
+*/
+
+//***********************************************************
+//Vediamo come fare un destructuring di un array
+
+const nameData = ["Nico", "Deku", 28, 1997, "Ucraina"];
+//Possiamo assegnare valori a variabili al posto di andare a selezionarli per indice
+// const nome = nameData[0], const cognome = nameData[1] etc...
+const [nomePrimario, nomeSecondario, ...restoDati] = nameData;
+console.log(nomePrimario, nomeSecondario); // E come se avessimo creato 2 nuove variabili const
+//         Nico             Deku
+console.log(restoDati); // Array(3) [ 28, 1997, "Ucraina" ]
 

@@ -188,8 +188,24 @@ console.log(pricesData); //[ { index: 0, taxedPrice: 13.440000000000001, origina
 // Vediamo il map()
 // Se dobbiamo modificare l'array mantenendo i dati originali invariati usiamo map
 
-const height = [182, 178, 158, 198];
+const height = [182.3, 178.2, 158.6, 181.4];
 const morningHeight = height.map((height, id, heightArray) => {
   return height + 2; // A differenza di forEach map() richiede un return
 });
 console.log(height, morningHeight); //Array(4) [ 182, 178, 158, 198 ] Array(4) [ 184, 180, 160, 200]
+
+//***********************************************************
+// Per mettere in ordine crescente o decrescente un array abbiamo .sort() e il .reverse()
+
+const badExample = taxedPrices.sort(); // Sort trasfroma i numeri in array e compara solo il primo numero
+console.log(badExample); // [ 13.440000000000001, 25.76, 3.3600000000000003, 461.44000000000005 ]
+// Come possiamo vedere non sono ordinati...
+const goodExample = taxedPrices.sort((a, b) => {
+  if (a > b) return 1; // oppure basta ritornare -1 qua 
+  else if (a === b) return 0;
+  else return -1; // e +1 qua per fare la stessa cosa di reverse()
+});
+console.log(goodExample);//[ 3.3600000000000003, 13.440000000000001, 25.76, 461.44000000000005 ]
+
+const reversedGoodExample = goodExample.reverse();
+console.log(reversedGoodExample); //[ 461.44000000000005, 25.76, 13.440000000000001, 3.3600000000000003 ]

@@ -218,4 +218,8 @@ console.log(reversedGoodExample); //[ 461.44000000000005, 25.76, 13.440000000000
 const filteredHeights = height.filter((height, index, heightArray) => {
   return height > 180;// se è true lo mette nel nuovo array, altrimenti lo scarta
 });
-console.log(filteredHeights);
+console.log(filteredHeights);  // [ 182.3, 181.4 ]
+
+// Vediamo come possiamo accorciare questo codice grazie alla funzione anonima'
+const shorteredFilteredHeights = height.filter(number => number > 180);
+console.log(shorteredFilteredHeights); //[ 182.3, 181.4 ]

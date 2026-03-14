@@ -1,28 +1,28 @@
-// Per creare un nuovo set dobbiamo usare sempre 
+// Per creare un nuovo set dobbiamo usare sempre
 // I Set non permettono duplicati e ci permettono di gestire valori unici
-const ids = new Set([1,2,3]);
+const ids = new Set([1, 2, 3]);
 console.log(ids); //Set(3) [ 1, 2, 3 ]
 console.log(ids.has(1)); // true
 
 ids.add(2); // Anche se aggiungiamo 2, 2 esiste gia quindi non aggiunge nulla
 ids.delete(3);
-console.log(ids); //Set(3) [ 1, 2] 
+console.log(ids); //Set(3) [ 1, 2]
 
 console.log(ids.entries());
-for (const entry of ids.entries()){
-  console.log(entry);//Array [ 1, 1 ] Array [ 2, 2 ]
-  console.log(entry[0]);// 1  2
+for (const entry of ids.entries()) {
+  console.log(entry); //Array [ 1, 1 ] Array [ 2, 2 ]
+  console.log(entry[0]); // 1  2
 }
 
 //****************************************************
 // Usiamo la map quando abbiamo un oggetto che non vogliamo modificare
 // Ma al quale vogliamo aggiungere dei dati o informazioni VALUE
 // Per esempio se lo usiamo da altre parti e non vogliamo modificare l'oggetto originale
-const person1 = {name: "Nico"};
-const person2 = {name: "Marco"};
+const person1 = { name: "Nico" };
+const person2 = { name: "Marco" };
 
 // new Map([['key','some values']])
-const peopleData = new Map([[person1,[{date:'21st March', price: 10}]]]);
+const peopleData = new Map([[person1, [{ date: "21st March", price: 10 }]]]);
 console.log(peopleData);
 /* Object { name: "Nico" } → Array [ {…} ]
     <key>: Object { name: "Nico" }
@@ -35,42 +35,50 @@ console.log(peopleData.get(person1));
 
 // Possiamo anche aggiungere dati ad una Map settata
 
-peopleData.set(person2, [{date: "6 December", price: 23}]);
+peopleData.set(person2, [{ date: "6 December", price: 23 }]);
 /*  0: Object { name: "Nico" } → Array [ {…} ]
     1: Object { name: "Marco" } → Array [ {…} ]
         <key>: Object { name: "Marco" }
         <value>: Array [ {…} ]
             0: Object { date: "6 December", price: 23 }*/
 
-//****************************************************    
+//****************************************************
 // Vediamo i 3 modi per mostrare tutte le info sempre con il for of
 
-for(const entry of peopleData.entries()){
+for (const entry of peopleData.entries()) {
   console.log(entry); // Ci ritorna tutti i dati
 }
 
-for(const [key, value] of peopleData.entries()){
+for (const [key, value] of peopleData.entries()) {
   console.log(key, value); // Ci ritorna chiave: valore
 }
 
-for(const key of peopleData.keys()){
+for (const key of peopleData.keys()) {
   console.log(key); // Ci ritorna solo le chiavi
 }
 
-for(const value of peopleData.values()){
+for (const value of peopleData.values()) {
   console.log(value); // Ci ritorna solo i valori
 }
 //                      2
 console.log(peopleData.size); // Ci aiuta a vedere quanti chiavi valori ci sono nella Map
 
-
-//****************************************************   
+//****************************************************
 // Esiste anche il WeakSet che ha molti meno metodi rispetto al set normale
 
-const person3 = {name: "Max", age: 49};
+const person3 = { name: "Max", age: 49 };
 const weakSetPersons = new WeakSet();
 weakSetPersons.add(person3);
 
 // Lo usiamo per far pulire al garbage collector il WeakSet una volta che non ci serve piu
 // Es: person = null;
 // Lo pulisce nel caso in cui nessun altra parte del codice usa quell oggetto
+
+//****************************************************
+// Esiste anche il WeakMap che ha meno metodi e ha la stessa idea del WeakSet
+// Come il WeakSet il WeakMap permette al browser di usare il garbage collector per liberare memoria
+// Per gli oggetti non utilizzati dopo che gli settiamo a null
+const weakMapPerson = new WeakMap();
+weakMapPerson.add(person3);
+// Se volessimo attivare il garbage collector allora dobbiamo settare
+person3 = null;

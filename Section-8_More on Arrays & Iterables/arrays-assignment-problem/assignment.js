@@ -15,6 +15,7 @@ console.log(filteredNumbers, mappedNumbers, multNumbers);
 // Second assignment and third assignment
 
 function findMax(...numb) {
+  if (numb.length === 0) return [null, null];
   let maxNum = numb[0];
   let minNum = numb[0];
   for (const num of numb) {
@@ -26,3 +27,16 @@ function findMax(...numb) {
 const [maxNumber, minNumber] = findMax(...numbers);
 
 console.log(maxNumber, minNumber);
+
+// Fourth assignment
+
+const list = new Set([123, 42, 32, 6, 4, 1, 4]);
+
+function addToList(num){
+  if(list.has(num)) console.log("Errore:Duplicato!");
+  list.add(num);
+}
+
+addToList(4);
+addToList(5);
+console.log(list);

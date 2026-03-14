@@ -42,4 +42,23 @@ peopleData.set(person2, [{date: "6 December", price: 23}]);
         <value>: Array [ {…} ]
             0: Object { date: "6 December", price: 23 }*/
 
-//****************************************************         
+//****************************************************    
+// Vediamo i 3 modi per mostrare tutte le info sempre con il for of
+
+for(const entry of peopleData.entries()){
+  console.log(entry); // Ci ritorna tutti i dati
+}
+
+for(const [key, value] of peopleData.entries()){
+  console.log(key, value); // Ci ritorna chiave: valore
+}
+
+for(const key of peopleData.keys()){
+  console.log(key); // Ci ritorna solo le chiavi
+}
+
+for(const value of peopleData.values()){
+  console.log(value); // Ci ritorna solo i valori
+}
+//                      2
+console.log(peopleData.size); // Ci aiuta a vedere quanti chiavi valori ci sono nella Map

@@ -62,3 +62,15 @@ for(const value of peopleData.values()){
 }
 //                      2
 console.log(peopleData.size); // Ci aiuta a vedere quanti chiavi valori ci sono nella Map
+
+
+//****************************************************   
+// Esiste anche il WeakSet che ha molti meno metodi rispetto al set normale
+
+const person3 = {name: "Max", age: 49};
+const weakSetPersons = new WeakSet();
+weakSetPersons.add(person3);
+
+// Lo usiamo per far pulire al garbage collector il WeakSet una volta che non ci serve piu
+// Es: person = null;
+// Lo pulisce nel caso in cui nessun altra parte del codice usa quell oggetto

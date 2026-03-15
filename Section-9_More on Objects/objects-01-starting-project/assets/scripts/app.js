@@ -29,10 +29,17 @@ const addMovieHandler = () => {
   renderMovies();
 };
 
-const renderMovies = () => {
+const renderMovies = (filterTerm = "") => {
   movieList.innerHTML = ""; // Non è ideale perche andiamo a pulire tutta la lista e aggiungerci di nuovo tutti i film
-  movieList.classList.add("visible");
-  movies.forEach((movie) => {
+  if(movies.length){
+      movieList.classList.add("visible");
+  } else {
+    movieList.classList.remove("visible");
+  }
+  // Filter functionality
+  const filteredMovies = !filterTerm ? movies : movies.filter(movie => movie.info.title.includes(filterTerm));
+  console.log(filteredMovies);
+  filteredMovies.forEach((movie) => {
     const li = document.createElement("li");
     let text = "";
     for (const key in movie.info) {
@@ -46,4 +53,10 @@ const renderMovies = () => {
   });
 };
 
+const searchMovieHandler = () => {
+  const filterTerm = document.getElementById("filter-title").value;
+  renderMovies(filterTerm);
+};
+
 addMovieBtn.addEventListener("click", addMovieHandler);
+searchBtn.addEventListener("click", searchMovieHandler);

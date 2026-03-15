@@ -30,12 +30,18 @@ const addMovieHandler = () => {
 };
 
 const renderMovies = () => {
-  movieList.innerHTML = ''; // Non è ideale perche andiamo a pulire tutta la lista e aggiungerci di nuovo tutti i film
+  movieList.innerHTML = ""; // Non è ideale perche andiamo a pulire tutta la lista e aggiungerci di nuovo tutti i film
   movieList.classList.add("visible");
   movies.forEach((movie) => {
-    console.log(movie);
     const li = document.createElement("li");
-    li.innerHTML = `<h2>${movie.info.title}</h2>`;
+    let text = "";
+    for (const key in movie.info) {
+      if (key !== "title") {
+        text += ` ${key}: ${movie.info[key]}`;
+      }
+    }
+    li.innerHTML = `<h3>${movie.info.title}<span> - ${text}</span></h3>
+    `;
     movieList.appendChild(li);
   });
 };

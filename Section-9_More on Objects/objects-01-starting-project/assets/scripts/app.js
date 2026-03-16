@@ -40,6 +40,14 @@ const renderMovies = (filterTerm = "") => {
   const filteredMovies = !filterTerm ? movies : movies.filter(movie => movie.info.title.includes(filterTerm));  
   //console.log(filteredMovies);
   filteredMovies.forEach((movie) => {
+    // Possiamo anche verificare se esiste una chiave nell'oggetto
+    if(!('info' in movie)){
+      console.log("Non esiste la chaive info dentro i movie");
+    }
+    // Oppure abbiamo un altro modo
+    if(!(movie.info === undefined)){
+      console.log("Non esiste la chaive info dentro i movie");
+    }
     // Destructuring of object
     // Deve avere lo stesso nome della chiave dell'object 
     const {info} = movie;

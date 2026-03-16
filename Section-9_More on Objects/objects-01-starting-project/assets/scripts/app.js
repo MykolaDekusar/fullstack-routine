@@ -23,10 +23,14 @@ const addMovieHandler = () => {
       title,
       [extraName]: extraValue,
     },
+    getFormattedTitle: function(){
+      return this.info.title.toUpperCase();
+    }
   };
   movies.push(newMovie);
   //console.log(movies);
   renderMovies();
+  console.log(newMovie.getFormattedTitle());
 };
 
 const renderMovies = (filterTerm = "") => {
@@ -45,8 +49,8 @@ const renderMovies = (filterTerm = "") => {
       console.log("Non esiste la chaive info dentro i movie");
     }
     // Oppure abbiamo un altro modo
-    if(!(movie.info === undefined)){
-      console.log("Non esiste la chaive info dentro i movie");
+    if(movie.info === undefined){
+      console.log("Non esiste la chiave info dentro i movie");
     }
     // Destructuring of object
     // Deve avere lo stesso nome della chiave dell'object 

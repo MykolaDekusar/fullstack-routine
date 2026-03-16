@@ -9,6 +9,7 @@ const person = {
   name: "Nico",
   age: 28,
   hobbies: ["Racing", "Gaming"],
+  // Importante, negli oggetti non si usano arrow functions
   greet: function () {
     console.log(`Hi there I'm ${this.name}`);
   },

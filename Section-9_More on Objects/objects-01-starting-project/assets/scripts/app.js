@@ -81,11 +81,20 @@ const renderMovies = (filterTerm = "") => {
     movieList.appendChild(li);
   });
 };
-
-const searchMovieHandler = () => {
+//The browser binds "this" for you (on event listeners)
+// to the DOM element that triggered the event
+// ONLY FOR NORMAL FUNCTIONS, NO ARROW FUNCTIONS
+const searchMovieHandler = function () {
+  console.log(this);//<button id="search-btn"> in this case 
+  const filterTerm = document.getElementById("filter-title").value;
+  renderMovies(filterTerm);
+};
+// Arrow functions don't bind "this" to anything
+const searchMovieHandler2 = () => {
+  console.log(this);//Window in this case 
   const filterTerm = document.getElementById("filter-title").value;
   renderMovies(filterTerm);
 };
 
 addMovieBtn.addEventListener("click", addMovieHandler);
-searchBtn.addEventListener("click", searchMovieHandler);
+searchBtn.addEventListener("click", searchMovieHandler2);

@@ -25,7 +25,7 @@ const addMovieHandler = () => {
     },
   };
   movies.push(newMovie);
-  console.log(movies);
+  //console.log(movies);
   renderMovies();
 };
 
@@ -37,17 +37,22 @@ const renderMovies = (filterTerm = "") => {
     movieList.classList.remove("visible");
   }
   // Filter functionality
-  const filteredMovies = !filterTerm ? movies : movies.filter(movie => movie.info.title.includes(filterTerm));
-  console.log(filteredMovies);
+  const filteredMovies = !filterTerm ? movies : movies.filter(movie => movie.info.title.includes(filterTerm));  
+  //console.log(filteredMovies);
   filteredMovies.forEach((movie) => {
+    // Destructuring of object
+    // Deve avere lo stesso nome della chiave dell'object 
+    const {info} = movie;
+    // Possiamo anche assegnarli un nome diverso
+    const {title: movieTitle} = info;
     const li = document.createElement("li");
     let text = "";
-    for (const key in movie.info) {
+    for (const key in info) {
       if (key !== "title") {
-        text += ` ${key}: ${movie.info[key]}`;
+        text += ` ${key}: ${info[key]}`;
       }
     }
-    li.innerHTML = `<h3>${movie.info.title}<span> - ${text}</span></h3>
+    li.innerHTML = `<h3>${movieTitle}<span> - ${text}</span></h3>
     `;
     movieList.appendChild(li);
   });

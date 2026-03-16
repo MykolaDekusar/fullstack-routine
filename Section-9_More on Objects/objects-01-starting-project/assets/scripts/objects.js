@@ -42,3 +42,16 @@ console.log(person["1.5"]);
 // Possiamo anche accedere dinamicamente ai valori 
 const keyName = "first-name";
 console.log(person[keyName]);
+
+// Se volessimo copiare l'oggetto person possiamo usare lo spread operator
+
+// Possiamo usare lo spread operator ... per copiare anche l'array
+// In modo che non rimanga reference dentro person 2
+const person2 = {...person, hobbies: [...person.hobbies]};
+
+//**********************************************************
+//Abbiamo un altro metodo per copiare gli oggetti
+//                          target
+const person3 = Object.assign({}, person);
+// Ci permette di unire varie cose come fondere 2 oggetti che hanno diversi proprieta
+// Quindi possiamo prendere una persona e unirci delle particolarita (Essere umano, respira etc...)

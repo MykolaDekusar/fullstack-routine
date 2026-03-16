@@ -23,9 +23,9 @@ const addMovieHandler = () => {
       title,
       [extraName]: extraValue,
     },
-    getFormattedTitle: function(){
+    getFormattedTitle: function () {
       return this.info.title.toUpperCase();
-    }
+    },
   };
   movies.push(newMovie);
   //console.log(movies);
@@ -35,28 +35,31 @@ const addMovieHandler = () => {
 
 const renderMovies = (filterTerm = "") => {
   movieList.innerHTML = ""; // Non è ideale perche andiamo a pulire tutta la lista e aggiungerci di nuovo tutti i film
-  if(movies.length){
-      movieList.classList.add("visible");
+  if (movies.length) {
+    movieList.classList.add("visible");
   } else {
     movieList.classList.remove("visible");
   }
   // Filter functionality
-  const filteredMovies = !filterTerm ? movies : movies.filter(movie => movie.info.title.includes(filterTerm));  
+  const filteredMovies = !filterTerm
+    ? movies
+    : movies.filter((movie) => movie.info.title.includes(filterTerm));
   //console.log(filteredMovies);
   filteredMovies.forEach((movie) => {
     // Possiamo anche verificare se esiste una chiave nell'oggetto
-    if(!('info' in movie)){
+    if (!("info" in movie)) {
       console.log("Non esiste la chaive info dentro i movie");
     }
     // Oppure abbiamo un altro modo
-    if(movie.info === undefined){
+    if (movie.info === undefined) {
       console.log("Non esiste la chiave info dentro i movie");
     }
     // Destructuring of object
-    // Deve avere lo stesso nome della chiave dell'object 
-    const {info} = movie;
+    // Deve avere lo stesso nome della chiave dell'object
+    const { info } = movie;
     // Possiamo anche assegnarli un nome diverso
-    const {title: movieTitle} = info;
+    const { title: movieTitle } = info;
+
     const li = document.createElement("li");
     let text = "";
     for (const key in info) {
@@ -64,7 +67,16 @@ const renderMovies = (filterTerm = "") => {
         text += ` ${key}: ${info[key]}`;
       }
     }
-    li.innerHTML = `<h3>${movieTitle}<span> - ${text}</span></h3>
+    // Possiamo anche prendere il metodo da un oggetto
+    let { getFormattedTitle } = movie;
+    // Poi usando .bind() gli possiamo dire a cosa si deve riferire this
+    // return this.info.title.toUpperCase();
+    // getFormattedTitle= getFormattedTitle.bind(movie);
+    // Oppure possiamo use .call(movie) in questo caso
+    // Se .bind() prepara una funzione per il futuro .call() la esegue ma con i dati che gli passiamo
+    // .call() è utile per modificare a cosa si riferisce this
+    // Abbiamo anche .apply() pero prende meno argomenti
+    li.innerHTML = `<h3>${getFormattedTitle.call(movie)}${text}</h3>
     `;
     movieList.appendChild(li);
   });

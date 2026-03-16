@@ -13,6 +13,10 @@ const person = {
   greet: function () {
     console.log(`Hi there I'm ${this.name}`);
   },
+  // Un altro modo per creare la funzione (non è proprio uguale a quella sopra)
+  greet2 (){
+    console.log(`Hi there I'm ${this.age}`);
+  },
   //Possiamo anche assegnare numeri POSITIVI come chiavi
   1.5: "Hello",
   // Possiamo anche dinamicamente settare le chiavi dell'oggetto

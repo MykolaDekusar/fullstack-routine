@@ -9,7 +9,7 @@ const addMovieHandler = () => {
   const extraName = document.getElementById("extra-name").value;
   const extraValue = document.getElementById("extra-value").value;
   if (
-    title.trim() === "" ||
+    /*title.trim() === "" || */
     extraName.trim() === "" ||
     extraValue.trim() === ""
   ) {
@@ -20,13 +20,28 @@ const addMovieHandler = () => {
   const newMovie = {
     id: Math.random(),
     info: {
-      title,
+      // Al posto di passare title settiamo il setter
+      set title(val) {
+        if (val.trim === "") {
+          // Scriviamo _title per segnalare che è un valore interno
+          this._title = "DEFAULT";
+          return;
+        }
+        this._title = val;
+      },
+      // Poi per richiamare il title usiamo in getter
+      get title() {
+        return this._title;
+      },
+      // title,
       [extraName]: extraValue,
     },
     getFormattedTitle: function () {
       return this.info.title.toUpperCase();
     },
   };
+  // Settiamo i setter e getter, vediamo con title
+  newMovie.info.title = title;
   movies.push(newMovie);
   //console.log(movies);
   renderMovies();
@@ -63,7 +78,8 @@ const renderMovies = (filterTerm = "") => {
     const li = document.createElement("li");
     let text = "";
     for (const key in info) {
-      if (key !== "title") {
+      // Escludiamo la dupplicazione 
+      if (key !== "title" && key !== "_title") {
         text += ` ${key}: ${info[key]}`;
       }
     }
@@ -85,13 +101,13 @@ const renderMovies = (filterTerm = "") => {
 // to the DOM element that triggered the event
 // ONLY FOR NORMAL FUNCTIONS, NO ARROW FUNCTIONS
 const searchMovieHandler = function () {
-  console.log(this);//<button id="search-btn"> in this case 
+  console.log(this); //<button id="search-btn"> in this case
   const filterTerm = document.getElementById("filter-title").value;
   renderMovies(filterTerm);
 };
 // Arrow functions don't bind "this" to anything
 const searchMovieHandler2 = () => {
-  console.log(this);//Window in this case 
+  console.log(this); //Window in this case
   const filterTerm = document.getElementById("filter-title").value;
   renderMovies(filterTerm);
 };

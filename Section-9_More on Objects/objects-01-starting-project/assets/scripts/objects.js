@@ -11,6 +11,7 @@ const person = {
   hobbies: ["Racing", "Gaming"],
   // Importante, negli oggetti non si usano arrow functions
   greet: function () {
+    console.log(this);
     console.log(`Hi there I'm ${this.name}`);
   },
   // Un altro modo per creare la funzione (non è proprio uguale a quella sopra)
@@ -24,6 +25,7 @@ const person = {
 };
 
 person.greet();
+person.greet2();
 
 // Vediamo come modificare i valori di un oggetto'
 person.name = "Max";

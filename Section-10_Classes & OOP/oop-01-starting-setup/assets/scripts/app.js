@@ -1,5 +1,16 @@
+//Definiamo la classe Product
+class Product {
+  title = "DEFAULT";
+  imageUrl; //undefined
+  price; //undefined
+  description; //undefined
+}
+
 const productList = {
   products: [
+    // Utilizziamo la classe Product per creare un nuovo prodotto
+    // Grazie al constructor
+    new Product(),
     {
       title: "A pillow",
       imageUrl:
@@ -16,12 +27,12 @@ const productList = {
     },
   ],
   render() {
-    const renderLocation = document.getElementById('app');
-    const prodList = document.createElement('ul');
-    prodList.className = 'product-list';
-    for(const prod of this.products){
-      const prodEl = document.createElement('li');
-      prodEl.className = 'product-item';
+    const renderLocation = document.getElementById("app");
+    const prodList = document.createElement("ul");
+    prodList.className = "product-list";
+    for (const prod of this.products) {
+      const prodEl = document.createElement("li");
+      prodEl.className = "product-item";
       prodEl.innerHTML = `
       <div>
         <img src ='${prod.imageUrl}' alt = '${prod.title}'>
@@ -32,12 +43,12 @@ const productList = {
           <button>Add to Cart</button>
         </div>
       </div>
-      `
+      `;
       prodList.append(prodEl);
     }
-    
+
     renderLocation.append(prodList);
-  }
+  },
 };
 
 productList.render();

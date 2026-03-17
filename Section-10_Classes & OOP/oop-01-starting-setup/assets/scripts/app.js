@@ -4,27 +4,45 @@ class Product {
   imageUrl; //undefined
   price; //undefined
   description; //undefined
+  // Creiamo un metodo speciale per costruire
+  constructor(title, imageUrl, price, description) {
+    this.title = title;
+    this.imageUrl = imageUrl;
+    this.price = price;
+    this.description = description;
+  }
 }
 
 const productList = {
   products: [
     // Utilizziamo la classe Product per creare un nuovo prodotto
     // Grazie al constructor
-    new Product(),
-    {
-      title: "A pillow",
-      imageUrl:
-        "https://m.media-amazon.com/images/I/91ZmVcNJh9L._AC_UF894,1000_QL80_.jpg",
-      price: 19.99,
-      description: "A super soft comfy pillow",
-    },
-    {
-      title: "Carpet",
-      imageUrl:
-        "https://www.loomkart.com/cdn/shop/files/fauxsilkcarpetloomkart_neosilk550017_3.jpg?v=1753537930",
-      price: 499.99,
-      description: "Persian premium carpet",
-    },
+    new Product(
+      "A pillow",
+      "https://m.media-amazon.com/images/I/91ZmVcNJh9L._AC_UF894,1000_QL80_.jpg",
+      19.99,
+      "A super soft comfy pillow",
+    ),
+    new Product(
+      "Carpet",
+      "https://www.loomkart.com/cdn/shop/files/fauxsilkcarpetloomkart_neosilk550017_3.jpg?v=1753537930",
+      499.99,
+      "Persian premium carpet",
+    ),
+    // {
+    //   title: "A pillow",
+    //   imageUrl:
+    //     "https://m.media-amazon.com/images/I/91ZmVcNJh9L._AC_UF894,1000_QL80_.jpg",
+    //   price: 19.99,
+    //   description: "A super soft comfy pillow",
+    // },
+    // {
+    //   title: "Carpet",
+    //   imageUrl:
+    //     "https://www.loomkart.com/cdn/shop/files/fauxsilkcarpetloomkart_neosilk550017_3.jpg?v=1753537930",
+    //   price: 499.99,
+    //   description: "Persian premium carpet",
+    // },
   ],
   render() {
     const renderLocation = document.getElementById("app");

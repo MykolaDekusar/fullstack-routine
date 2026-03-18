@@ -17,7 +17,6 @@ class ProductItemRender {
   constructor(product){
     this.product = product;
   }
-
   render(){
     const prodEl = document.createElement("li");
     const prod = this.product;
@@ -33,7 +32,14 @@ class ProductItemRender {
         </div>
       </div>
       `;
+      // Creiamo un addCartButton per ogni singolo elemento siccome ne creiamo 1 ogni volta
+      const addCartButton = prodEl.querySelector('button');
+      addCartButton.addEventListener("click", this.addToCart.bind(this));
     return prodEl;
+  }
+  addToCart(){
+    console.dir(this);
+    console.log(`Adding ${this.product.title} to cart`);
   }
 }
 
@@ -70,6 +76,9 @@ class ProductList {
     renderLocation.append(prodList);
   }
 }
+const productList = new ProductList();
+
+productList.render();
 
 // const productList = {
 //   products: [],
@@ -128,6 +137,4 @@ class ProductList {
 // },
 // };
 
-const productList = new ProductList();
 
-productList.render();

@@ -48,14 +48,14 @@ class ProductItemRender {
 // Creiamo la classe del carrello
 class ShoppingCart {
   items = [];
-  render(){
-    const cartEl = document.createElement('section');
+  render() {
+    const cartEl = document.createElement("section");
     let total = 0;
     cartEl.innerHTML = `
     <h2>Total: \$${total}</h2>
     <button>Order Now!</button>
     `;
-    cartEl.className = 'cart';
+    cartEl.className = "cart";
     return cartEl;
   }
 }
@@ -81,7 +81,6 @@ class ProductList {
   constructor() {}
   // Passiamo qua dentro la logica
   render() {
-    const renderLocation = document.getElementById("app");
     const prodList = document.createElement("ul");
     prodList.className = "product-list";
     for (const prod of this.products) {
@@ -89,14 +88,23 @@ class ProductList {
       const prodEl = productItem.render();
       prodList.append(prodEl);
     }
-
-    renderLocation.append(prodList);
+    return prodList;
   }
 }
 
-const productList = new ProductList();
+class Shop {
+  render() {
+    const renderLocation = document.getElementById("app");
+    const cart = new ShoppingCart();
+    cart.render();
+    const productList = new ProductList();
+    renderLocation.append(cart.render());
+    renderLocation.append(productList.render());
+  }
+}
 
-productList.render();
+const shop = new Shop();
+shop.render();
 
 // const productList = {
 //   products: [],

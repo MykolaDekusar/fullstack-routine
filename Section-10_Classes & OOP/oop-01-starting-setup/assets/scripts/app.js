@@ -14,14 +14,14 @@ class Product {
 }
 
 class ProductItemRender {
-  constructor(product){
+  constructor(product) {
     this.product = product;
   }
-  render(){
+  render() {
     const prodEl = document.createElement("li");
     const prod = this.product;
-      prodEl.className = "product-item";
-      prodEl.innerHTML = `
+    prodEl.className = "product-item";
+    prodEl.innerHTML = `
       <div>
         <img src ='${prod.imageUrl}' alt = '${prod.title}'>
         <div class='product-item__content'>
@@ -32,14 +32,31 @@ class ProductItemRender {
         </div>
       </div>
       `;
-      // Creiamo un addCartButton per ogni singolo elemento siccome ne creiamo 1 ogni volta
-      const addCartButton = prodEl.querySelector('button');
-      addCartButton.addEventListener("click", this.addToCart.bind(this));
+    // Creiamo un addCartButton per ogni singolo elemento siccome ne creiamo 1 ogni volta
+    const addCartButton = prodEl.querySelector("button");
+    // Con bind gli passiamo il this che si riferisce all'oggetto
+    addCartButton.addEventListener("click", this.addToCart.bind(this));
     return prodEl;
   }
-  addToCart(){
+
+  addToCart() {
     console.dir(this);
     console.log(`Adding ${this.product.title} to cart`);
+  }
+}
+
+// Creiamo la classe del carrello
+class ShoppingCart {
+  items = [];
+  render(){
+    const cartEl = document.createElement('section');
+    let total = 0;
+    cartEl.innerHTML = `
+    <h2>Total: \$${total}</h2>
+    <button>Order Now!</button>
+    `;
+    cartEl.className = 'cart';
+    return cartEl;
   }
 }
 
@@ -69,13 +86,14 @@ class ProductList {
     prodList.className = "product-list";
     for (const prod of this.products) {
       const productItem = new ProductItemRender(prod);
-      const prodEl = productItem.render()
+      const prodEl = productItem.render();
       prodList.append(prodEl);
     }
 
     renderLocation.append(prodList);
   }
 }
+
 const productList = new ProductList();
 
 productList.render();
@@ -136,5 +154,3 @@ productList.render();
 //   renderLocation.append(prodList);
 // },
 // };
-
-

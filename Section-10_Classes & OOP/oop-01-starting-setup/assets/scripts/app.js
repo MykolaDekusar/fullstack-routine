@@ -14,8 +14,9 @@ class Product {
 }
 
 class ProductItemRender {
-  constructor(product) {
+  constructor(product, addToCart) {
     this.product = product;
+    this.addToCart = addToCart;
   }
   render() {
     const prodEl = document.createElement("li");
@@ -34,28 +35,36 @@ class ProductItemRender {
       `;
     // Creiamo un addCartButton per ogni singolo elemento siccome ne creiamo 1 ogni volta
     const addCartButton = prodEl.querySelector("button");
-    // Con bind gli passiamo il this che si riferisce all'oggetto
-    addCartButton.addEventListener("click", this.addToCart.bind(this));
+    addCartButton.addEventListener("click", () => {
+      this.addToCart(prod);
+    });
     return prodEl;
-  }
-
-  addToCart() {
-    console.dir(this);
-    console.log(`Adding ${this.product.title} to cart`);
   }
 }
 
 // Creiamo la classe del carrello
 class ShoppingCart {
   items = [];
+  // Metodo per aggioranre il totale nell'HTML
+  set cartTotal(value){
+    this.totalOutput.innerHTML = `<h2>Total: \$${value.toFixed(2)}</h2>`;
+  }
+
+  addProduct(product){
+    this.items.push(product);
+    const sum = this.items.reduce((prev, next) => prev + next.price, 0);
+    this.cartTotal = sum;
+  }
+
   render() {
+    console.log(this.items);
     const cartEl = document.createElement("section");
-    let total = 0;
+    cartEl.className = "cart";
     cartEl.innerHTML = `
-    <h2>Total: \$${total}</h2>
+    <h2>Total: \$0.00</h2>
     <button>Order Now!</button>
     `;
-    cartEl.className = "cart";
+    this.totalOutput = cartEl.querySelector("h2");
     return cartEl;
   }
 }
@@ -78,13 +87,15 @@ class ProductList {
       "Persian premium carpet",
     ),
   ];
-  constructor() {}
+  constructor(addToCart) {
+    this.addToCart = addToCart;
+  }
   // Passiamo qua dentro la logica
   render() {
     const prodList = document.createElement("ul");
     prodList.className = "product-list";
     for (const prod of this.products) {
-      const productItem = new ProductItemRender(prod);
+      const productItem = new ProductItemRender(prod, this.addToCart);
       const prodEl = productItem.render();
       prodList.append(prodEl);
     }
@@ -92,14 +103,32 @@ class ProductList {
   }
 }
 
+class Header {
+  render() {
+    const header = document.createElement("header");
+    header.style.backgroundColor = "red";
+    header.style.height = "50px";
+    header.style.width = "100%";
+    header.innerHTML = "<h1>Shopping Center</h1>";
+    return header;
+  }
+}
+
 class Shop {
+  shoppingList = [];
   render() {
     const renderLocation = document.getElementById("app");
-    const cart = new ShoppingCart();
-    cart.render();
-    const productList = new ProductList();
-    renderLocation.append(cart.render());
+    // IMPORTANTE: salviamo il carrello in this.cart (proprietà della classe)
+    this.cart = new ShoppingCart();
+    const productList = new ProductList(this.addToCart.bind(this));
+    const header = new Header();
+
+    renderLocation.append(header.render());
+    renderLocation.append(this.cart.render());
     renderLocation.append(productList.render());
+  }
+  addToCart(product) {
+   this.cart.addProduct(product);
   }
 }
 

@@ -14,10 +14,13 @@ class Product {
 }
 
 class ProductItemRender {
-  constructor(product, addToCart) {
+  constructor(product) {
     this.product = product;
-    this.addToCart = addToCart;
   }
+  addToCart() {
+    App.addProductToCart(this.product);
+  }
+
   render() {
     const prodEl = document.createElement("li");
     const prod = this.product;
@@ -35,9 +38,7 @@ class ProductItemRender {
       `;
     // Creiamo un addCartButton per ogni singolo elemento siccome ne creiamo 1 ogni volta
     const addCartButton = prodEl.querySelector("button");
-    addCartButton.addEventListener("click", () => {
-      this.addToCart(prod);
-    });
+    addCartButton.addEventListener("click", this.addToCart.bind(this));
     return prodEl;
   }
 }
@@ -87,15 +88,13 @@ class ProductList {
       "Persian premium carpet",
     ),
   ];
-  constructor(addToCart) {
-    this.addToCart = addToCart;
-  }
+
   // Passiamo qua dentro la logica
   render() {
     const prodList = document.createElement("ul");
     prodList.className = "product-list";
     for (const prod of this.products) {
-      const productItem = new ProductItemRender(prod, this.addToCart);
+      const productItem = new ProductItemRender(prod);
       const prodEl = productItem.render();
       prodList.append(prodEl);
     }
@@ -115,20 +114,16 @@ class Header {
 }
 
 class Shop {
-  shoppingList = [];
   render() {
     const renderLocation = document.getElementById("app");
     // IMPORTANTE: salviamo il carrello in this.cart (proprietà della classe)
     this.cart = new ShoppingCart();
-    const productList = new ProductList(this.addToCart.bind(this));
+    const productList = new ProductList();
     const header = new Header();
 
     renderLocation.append(header.render());
     renderLocation.append(this.cart.render());
     renderLocation.append(productList.render());
-  }
-  addToCart(product) {
-    this.cart.addProduct(product);
   }
 }
 
@@ -136,6 +131,10 @@ class App {
   static init() {
     const shop = new Shop();
     shop.render();
+    this.cart = shop.cart;
+  }
+  static addProductToCart(product) {
+    this.cart.addProduct(product);
   }
 }
 

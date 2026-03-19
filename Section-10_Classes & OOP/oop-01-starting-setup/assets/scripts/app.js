@@ -46,11 +46,11 @@ class ProductItemRender {
 class ShoppingCart {
   items = [];
   // Metodo per aggioranre il totale nell'HTML
-  set cartTotal(value){
+  set cartTotal(value) {
     this.totalOutput.innerHTML = `<h2>Total: \$${value.toFixed(2)}</h2>`;
   }
 
-  addProduct(product){
+  addProduct(product) {
     this.items.push(product);
     const sum = this.items.reduce((prev, next) => prev + next.price, 0);
     this.cartTotal = sum;
@@ -128,12 +128,18 @@ class Shop {
     renderLocation.append(productList.render());
   }
   addToCart(product) {
-   this.cart.addProduct(product);
+    this.cart.addProduct(product);
   }
 }
 
-const shop = new Shop();
-shop.render();
+class App {
+  static init() {
+    const shop = new Shop();
+    shop.render();
+  }
+}
+
+App.init();
 
 // const productList = {
 //   products: [],

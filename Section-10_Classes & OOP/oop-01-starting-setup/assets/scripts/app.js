@@ -14,9 +14,11 @@ class Product {
 }
 
 class Component {
-  constructor(renderHookId) {
+  constructor(renderHookId, shouldRender = true) {
     this.hookId = renderHookId;
-    this.render();
+    if (shouldRender) {
+      this.render();
+    }
   }
 
   render() {}
@@ -39,8 +41,9 @@ class Component {
 class ProductItemRender extends Component {
   constructor(product, renderHookId) {
     // For any work that involves "this" it's required to call super() first
-    super(renderHookId);
+    super(renderHookId, false);
     this.product = product;
+    this.render();
   }
   addToCart() {
     App.addProductToCart(this.product);
@@ -97,30 +100,41 @@ class ShoppingCart extends Component {
 class ProductList extends Component {
   constructor(renderHookId) {
     super(renderHookId); // Con super richiamiamo il constructor del padre Component
+    this.fetchProducts();
   }
-  products = [
-    // Utilizziamo la classe Product per creare un nuovo prodotto
-    // Grazie al constructor
-    new Product(
-      "A pillow",
-      "https://m.media-amazon.com/images/I/91ZmVcNJh9L._AC_UF894,1000_QL80_.jpg",
-      19.99,
-      "A super soft comfy pillow",
-    ),
-    new Product(
-      "Carpet",
-      "https://www.loomkart.com/cdn/shop/files/fauxsilkcarpetloomkart_neosilk550017_3.jpg?v=1753537930",
-      499.99,
-      "Persian premium carpet",
-    ),
-  ];
+
+  fetchProducts() {
+    this.products = [
+      // Utilizziamo la classe Product per creare un nuovo prodotto
+      // Grazie al constructor
+      new Product(
+        "A pillow",
+        "https://m.media-amazon.com/images/I/91ZmVcNJh9L._AC_UF894,1000_QL80_.jpg",
+        19.99,
+        "A super soft comfy pillow",
+      ),
+      new Product(
+        "Carpet",
+        "https://www.loomkart.com/cdn/shop/files/fauxsilkcarpetloomkart_neosilk550017_3.jpg?v=1753537930",
+        499.99,
+        "Persian premium carpet",
+      ),
+    ];
+    this.renderProducts();
+  }
+
+  renderProducts() {
+    for (const prod of this.products) {
+      new ProductItemRender(prod, "prod-list");
+    }
+  }
 
   // Passiamo qua dentro la logica
   render() {
     const prodList = this.createRootElement("ul", "product-list");
     prodList.id = "prod-list";
-    for (const prod of this.products) {
-      new ProductItemRender(prod, "prod-list");
+    if (this.products && this.products.length > 0) {
+      this.renderProducts();
     }
   }
 }
@@ -145,14 +159,14 @@ class Header extends Component {
   }
 }
 
-class Shop extends Component{
-  constructor(){
+class Shop extends Component {
+  constructor() {
     super();
   }
   render() {
-    new ProductList("app");
     // IMPORTANTE: salviamo il carrello in this.cart (proprietà della classe)
     this.cart = new ShoppingCart("app");
+    new ProductList("app");
     new Header("app");
   }
 }

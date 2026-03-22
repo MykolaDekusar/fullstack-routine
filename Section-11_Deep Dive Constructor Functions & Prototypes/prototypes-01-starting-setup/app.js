@@ -1,133 +1,77 @@
+/**
+ * RECAP PROTOTIPI E CLASSI - NICO'S LEARNING
+ * Basato sul corso di Max
+ */
+
+// --- 1. APPROCCIO MODERNO: LE CLASSI ---
+// Le classi sono "zucchero sintattico": rendono il codice pulito ma JS usa i prototipi sotto.
 class Person {
-  name = "Nico";
+  name = "Nico"; // Proprietà di istanza
 
   constructor() {
     this.age = 28;
   }
 
   greet() {
-    console.log(`Hi my name is ${this.name} and I'm ${this.age} years old.`);
+    console.log(`[Class] Hi, I'm ${this.name} and I'm ${this.age} years old.`);
   }
 }
 
 const person = new Person();
 person.greet();
 
-// Vediamo come questa classe verrebbe scritta con una function
-
+// --- 2. DIETRO LE QUINTE: LE FUNZIONI COSTRUTTRICI ---
 function Persona() {
-  // La parola new ci crea un oggetto
-  // this = {}
+  // Quando usiamo 'new':
+  // 1. JS crea un oggetto vuoto: this = {}
+  // 2. Collega il prototipo
   this.age = 28;
   this.name = "Nico";
+  
+  // Definire funzioni qui dentro le copia in OGNI oggetto (poco efficiente per la memoria)
   this.greet = function () {
-    console.log(`Hi my name is ${this.name} and I'm ${this.age} years old.`);
+    console.log(`[Function] Hi, I'm ${this.name} and I'm ${this.age} years old.`);
   };
-  // E sempre grazie a new ci ritorna
-  // return this;
-}
-// La cosa importane è la parola NEW che ci permette di fare queste cose
-// Altrimenti sarebbe solo una funzione void che non ritorna nulla
-const persona = new Persona();
-persona.greet();
-
-const person2 = Persona(); // Gli assegno una funzione che non ha return quindi undefined
-if (person2) {
-  person2.greet(); //can't access property "greet", person2 is undefined
-} else {
-  console.warn("undefined");
+  // 3. Ritorna l'oggetto: return this;
 }
 
-// Ogni oggetto ha un prototype
-console.log(persona);
-/*
-age: 28
-greet: function greet()
-name: "Nico"
-<prototype>: Object { … }
-*/
+const nico = new Persona();
+nico.greet();
 
-console.log(persona.__proto__);
-/*
-Object { … }
-  constructor: function Persona()
-  <prototype>: Object { … }
- */
-console.log(person.__proto__ === Person.prototype); // true Sono ESATTAMENTE lo stesso oggetto
-
-// Ogni oggetto basato sulla classe Person avra un prototipe che è esattamente questo oggetto
-// Persona.prototype = {
-//   printAge(){
-//     console.log(this.age);
-//   }
-// }
-// Un modo miglioe per aggiungere qualcosa al prototype
-Persona.prototype.printAge = () => {
-  console.log(this.age);
+// --- 3. IL PROTOTIPO: LA MEMORIA CONDIVISA ---
+// Invece di copiare 'printAge' in ogni oggetto, lo mettiamo nel "magazzino" comune (Prototype).
+// NOTA: Usiamo function() classica, NON la arrow function, altrimenti il 'this' non funziona!
+Persona.prototype.printAge = function() {
+  console.log(`La mia età è: ${this.age}`);
 };
-// Dobbiamo creare una nuova persona
-const persona2 = new Persona();
 
-persona2.printAge(); // 28
-console.log(persona2.__proto__); /*
-  Object { printAge: printAge() }
-    printAge: function printAge()
-*/
+const nico2 = new Persona();
+nico2.printAge(); 
 
-console.log(persona.__proto__);
-/*
-constructor: function Persona()
-  arguments: null
-  caller: null
-  length: 0
-  name: "Persona"
-  prototype: Object { printAge: printAge() } 
-*/
+// Verifica del collegamento (il "cordone ombelicale")
+console.log("Stesso prototipo?", nico2.__proto__ === Persona.prototype); // true
 
+// --- 4. TRUCCHI AVANZATI: OBJECT.CREATE E PROPRIETÀ ---
 
-// Un modo per creare un oggetto usando il __proto__
-const p1 = new person.__proto__.constructor();
-console.log(p1); //Object { name: "Nico", age: 28 } 
+// Creare un oggetto impostando subito il suo prototipo
+const studentProto = {
+  showProgress: function() { console.log(`Progresso: ${this.progress * 100}%`); }
+};
 
-// ogni oggetto utilizza Object.prototype come fallback
-console.dir(Object.prototype); // Questo è la parte finale
-
-// Vediamo come facciamo a Setting & Getting Prototypes
-
-const course = {     // const course =  new Object() metodo alternativo per creare 
-  title: 'Javascript - The Complete Guide.',
-  rating: 5,
-}; 
-
-// stesso risultato console.log(course.__proto__);
-console.log(Object.getPrototypeOf(course)); 
-
-//Modo per modificare il prototype di un Oggetto in questo caso course
-Object.setPrototypeOf(course, {
-  printRating: function(){
-    console.log(`${this.rating = 2}`);
-  }
-})
-
-course.printRating();
-
-// Abbiamo un altro modo di creare un nuovo Oggetto
-// è un modo speciale che ci permette di settare il prototype
-const student = Object.create({showProgress: () => {console.log(this.progress)}});
-console.log(student); /*
-Object {  }
-  <prototype>: Object { showProgress: showProgress() }
-*/
-
-//Possiamo aggiungere normalmente una proprietà
+const student = Object.create(studentProto);
 student.name = 'Nico';
 
-// Modo per modificare una proprità
+// Definire una proprietà con controllo totale (Sola lettura, non cancellabile)
 Object.defineProperty(student, 'progress', {
-  configurable:true,
-  enumerable: true,
   value: 0.8,
-  writable: false
-})
+  writable: false,     // Non può essere modificata
+  enumerable: true,    // Appare nei cicli for...in
+  configurable: false  // Non può essere cancellata
+});
 
-console.log(student.progress); //0.8
+console.log("Studente progress:", student.progress);
+student.showProgress();
+
+// --- 5. FALLBACK FINALE ---
+// Se JS non trova una proprietà, risale la catena fino a Object.prototype
+console.dir(Object.prototype);

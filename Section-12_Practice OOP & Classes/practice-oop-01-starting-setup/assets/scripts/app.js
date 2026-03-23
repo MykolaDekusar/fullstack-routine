@@ -1,21 +1,6 @@
-// Al click del bottone MoreInfo mi deve comparire un alert con i dettagli
-class ProjectList {
-  getProjects() {
-    // querySelectorAll restituisce una NodeList, che è più simile a un array
-    const activeLis = document.querySelectorAll("#active-projects li");
-    const finishedLis = document.querySelectorAll("#finished-projects li");
-
-    // Trasformiamo la NodeList in un vero Array e assegniamo
-    this.activeProjects = Array.from(activeLis);
-    this.finishedProjects = Array.from(finishedLis);
-    console.log(this.activeProjects, this.finishedProjects);
-    return {active: this.activeProjects, finished: this.finishedProjects}
-  }
-}
-
-class Tooltip extends ProjectList {
+class Tooltip { 
   constructor(){
-    super();
+
      this.buttonClass = document.querySelectorAll(".alt");
   }
  
@@ -25,6 +10,7 @@ class Tooltip extends ProjectList {
       button.addEventListener("click", (event) => {
         //trovo il li piu vicino al bottone
         const projectLi = event.target.closest('li');
+        // Al click del bottone MoreInfo mi deve comparire un alert con i dettagli
         const extraInfo = projectLi.dataset.extraInfo;
         alert(extraInfo);
       });
@@ -32,9 +18,9 @@ class Tooltip extends ProjectList {
   }
 }
 
-class ProjectItem extends ProjectList{
+class ProjectItem{
   constructor(){
-    super();
+
     this.buttonClass = document.querySelectorAll("button:last-child");
   }
   switchProjectHandler(){

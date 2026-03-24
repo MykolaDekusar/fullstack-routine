@@ -7,12 +7,33 @@ class DOMHelper {
 }
 
 class Tooltip {
-  constructor(itemId){
-    this.extraInfo= itemId.dataset.extraInfo;
+  constructor(itemId) {
+    this.extraInfo = itemId.dataset.extraInfo;
   }
 
-  showToolTip(){
-    alert(this.extraInfo);
+  styleToolTip() {
+    const toolTipElement = document.createElement("div");
+    toolTipElement.className = "card";
+    toolTipElement.style.textAlign = "center";
+    // Flexbox per centrare il contenuto
+    toolTipElement.style.display = "flex";
+    toolTipElement.style.justifyContent = "center"; // Centra orizzontalmente
+    toolTipElement.style.alignItems = "center"; // Centra verticalmente
+    toolTipElement.style.marginTop = "15px"; // Centra verticalmente
+    return toolTipElement;
+  }
+
+  detach(id){
+    id.srcElement.remove();
+    console.log(id.srcElement);
+  }
+
+  showToolTip() {
+    const header = document.querySelector("header");
+    const styledToolTip = this.styleToolTip();
+    styledToolTip.addEventListener('click', this.detach.bind(this));
+    styledToolTip.textContent = this.extraInfo;
+    header.insertAdjacentElement("afterend", styledToolTip);
   }
 }
 
@@ -26,7 +47,7 @@ class ProjectItem {
     this.connectSwitchBtn();
   }
 
-  showMoreInfoHandler(itemId){
+  showMoreInfoHandler(itemId) {
     const tooltip = new Tooltip(itemId);
     //Estraiamo l'info dal dataset
     //alert(itemId.dataset.extraInfo);
@@ -37,9 +58,9 @@ class ProjectItem {
     // Usando l'id ricevuto andiamo a pescare il singolo elemento
     const projectItemElement = document.getElementById(this.id);
     const moreBtn = projectItemElement.querySelector(`.alt`);
-    moreBtn.addEventListener('click', () => {
+    moreBtn.addEventListener("click", () => {
       this.showMoreInfoHandler(projectItemElement);
-    })
+    });
   }
   connectSwitchBtn() {
     // Usando l'id ricevuto andiamo a pescare il singolo elemento

@@ -23,7 +23,7 @@ class Tooltip {
     return toolTipElement;
   }
 
-  detach(id){
+  detach(id) {
     id.srcElement.remove();
     console.log(id.srcElement);
   }
@@ -31,7 +31,7 @@ class Tooltip {
   showToolTip() {
     const header = document.querySelector("header");
     const styledToolTip = this.styleToolTip();
-    styledToolTip.addEventListener('click', this.detach.bind(this));
+    styledToolTip.addEventListener("click", this.detach.bind(this));
     styledToolTip.textContent = this.extraInfo;
     header.insertAdjacentElement("afterend", styledToolTip);
   }
@@ -54,6 +54,14 @@ class ProjectItem {
     tooltip.showToolTip();
   }
 
+  update(updateProjectListFn, type) {
+    this.updateProjectListHandler = updateProjectListFn;
+    // Opzionale: Cambia il testo del bottone in base alla lista (Attiva/Concludi)
+    const projectItemElement = document.getElementById(this.id);
+    const switchBtn = projectItemElement.querySelector("button:last-of-type");
+    switchBtn.textContent = type === "active" ? "Finish" : "Activate";
+  }
+
   connectMoreInfoBtn() {
     // Usando l'id ricevuto andiamo a pescare il singolo elemento
     const projectItemElement = document.getElementById(this.id);
@@ -67,8 +75,10 @@ class ProjectItem {
     const projectItemElement = document.getElementById(this.id);
     const switchBtn = projectItemElement.querySelector(`button:last-of-type`);
     switchBtn.addEventListener(
-      "click",
-      this.updateProjectListHandler.bind(null, this.id),
+      "click", () => {
+        this.updateProjectListHandler(this.id)
+      }
+      
     );
   }
 }
@@ -101,7 +111,7 @@ class ProjectList {
     this.projects.push(project);
     console.log(this.projects);
     DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
-    project.update(this.switchProject.bind(this));
+    project.update(this.switchProject.bind(this),this.type);
   }
 
   switchProject(projectId) {
@@ -112,7 +122,6 @@ class ProjectList {
     // Alla lista
     this.switchHandler(this.projects.find((item) => item.id === projectId));
     this.projects = this.projects.filter((item) => item.id !== projectId);
-    console.log(this.projects);
   }
 }
 

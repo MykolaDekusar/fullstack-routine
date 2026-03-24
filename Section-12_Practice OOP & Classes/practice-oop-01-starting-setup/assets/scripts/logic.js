@@ -1,14 +1,56 @@
 class DOMHelper {
-  static moveElement(elementId, newDestinationSelector){
+  static moveElement(elementId, newDestinationSelector) {
     const element = document.getElementById(elementId);
     const destinationElement = document.querySelector(newDestinationSelector);
     destinationElement.append(element);
   }
 }
 
+class Tooltip {
+  constructor(itemId){
+    this.extraInfo= itemId.dataset.extraInfo;
+  }
 
-class Tooltip {}
+  showToolTip(){
+    alert(this.extraInfo);
+  }
+}
 
+class ProjectItem {
+  // Ricordiamoci che creiamo una nuova classe per ogni elemento grazie al ciclo
+  // for di ProjectList
+  constructor(id, updateProjectListFunction) {
+    this.updateProjectListHandler = updateProjectListFunction;
+    this.id = id;
+    this.connectMoreInfoBtn();
+    this.connectSwitchBtn();
+  }
+
+  showMoreInfoHandler(itemId){
+    const tooltip = new Tooltip(itemId);
+    //Estraiamo l'info dal dataset
+    //alert(itemId.dataset.extraInfo);
+    tooltip.showToolTip();
+  }
+
+  connectMoreInfoBtn() {
+    // Usando l'id ricevuto andiamo a pescare il singolo elemento
+    const projectItemElement = document.getElementById(this.id);
+    const moreBtn = projectItemElement.querySelector(`.alt`);
+    moreBtn.addEventListener('click', () => {
+      this.showMoreInfoHandler(projectItemElement);
+    })
+  }
+  connectSwitchBtn() {
+    // Usando l'id ricevuto andiamo a pescare il singolo elemento
+    const projectItemElement = document.getElementById(this.id);
+    const switchBtn = projectItemElement.querySelector(`button:last-of-type`);
+    switchBtn.addEventListener(
+      "click",
+      this.updateProjectListHandler.bind(null, this.id),
+    );
+  }
+}
 class ProjectList {
   projects = [];
 
@@ -26,7 +68,9 @@ class ProjectList {
 
   createNewItems(prjItems) {
     for (const prjItem of prjItems) {
-      this.projects.push(new ProjectItem(prjItem.id, this.switchProject.bind(this)));
+      this.projects.push(
+        new ProjectItem(prjItem.id, this.switchProject.bind(this)),
+      );
     }
     console.log(this.projects);
   }
@@ -35,7 +79,7 @@ class ProjectList {
   addProject(project) {
     this.projects.push(project);
     console.log(this.projects);
-    DOMHelper.moveElement(project.id, `#${this.type}-projects ul`)
+    DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
     project.update(this.switchProject.bind(this));
   }
 
@@ -48,27 +92,6 @@ class ProjectList {
     this.switchHandler(this.projects.find((item) => item.id === projectId));
     this.projects = this.projects.filter((item) => item.id !== projectId);
     console.log(this.projects);
-  }
-}
-class ProjectItem {
-  // Ricordiamoci che creiamo una nuova classe per ogni elemento grazie al ciclo
-  // for di ProjectList
-  constructor(id, updateProjectListFunction) {
-    this.updateProjectListHandler = updateProjectListFunction;
-    this.id = id;
-    this.connectMoreInfoBtn();
-    this.connectSwitchBtn();
-  }
-
-  connectMoreInfoBtn() {
-    const projectItemElement = document.getElementById(this.id);
-    const moreBtn = projectItemElement.querySelector(`.alt`);
-  }
-  connectSwitchBtn() {
-    // Usando l'id ricevuto andiamo a pescare il singolo elemento
-    const projectItemElement = document.getElementById(this.id);
-    const switchBtn = projectItemElement.querySelector(`button:last-of-type`);
-    switchBtn.addEventListener("click", this.updateProjectListHandler.bind(null, this.id));
   }
 }
 

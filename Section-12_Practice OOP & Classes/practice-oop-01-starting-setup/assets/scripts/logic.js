@@ -188,6 +188,10 @@ class App {
     finishedProjects.setSwitchHandlerFunction(
       activeProjects.addProject.bind(activeProjects),
     );
+
+    // const dynamicScript = document.createElement('script');
+    // dynamicScript.textContent = 'alert("Hello There!")';
+    // document.head.append(dynamicScript);
   }
 }
 

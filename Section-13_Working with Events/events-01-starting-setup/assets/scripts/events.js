@@ -40,3 +40,11 @@ function scrollHandler() {
 }
  
 window.addEventListener('scroll', scrollHandler);
+
+// Vediamo come prevenire l'invio automatico del form
+const form = document.querySelector('form');
+// Ascoltiamo all'evento submit (manda)
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  console.log(event);
+})

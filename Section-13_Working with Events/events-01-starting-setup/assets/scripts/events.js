@@ -3,7 +3,7 @@ const buttons = document.querySelectorAll("button");
 //button.onclick = () => {};
 
 function buttonClickHandler(event) {
-  console.log("I've been clicked");
+  console.log("Clicked button");
   console.log(event);
 }
 // Attenzione, funziona solo per 1 funzione alla volta
@@ -12,7 +12,9 @@ function buttonClickHandler(event) {
 // E' raccomandato usare addEventListener()
 buttons.forEach((btn) => {
   // Abbiamo diversi eventi come click, mouseenter
-  btn.addEventListener("mouseenter", buttonClickHandler);
+  btn.addEventListener("click", (event) => {
+    buttonClickHandler(event);
+  });
 });
 
 // Rimuoviamo l'event listenere dopo 2 secondi
@@ -48,3 +50,16 @@ form.addEventListener('submit', (event) => {
   event.preventDefault();
   console.log(event);
 })
+
+// Vediamo l'Event Propagation e stopPropagation()
+// Bubbled execution, DA DENTRO A FUORI
+const div = document.querySelector('div');
+div.addEventListener('click', (event)=> {
+  event.stopPropagation();
+  console.log(event);
+  console.log('Clicked DIV!'); // Possiamo aggiungere un terzo argomento che di default é false
+  // ma se lo mettiamo a true diciamo che questo evento deve far parte di 
+  // CAPTURING quindi parte per primo
+}, true) //Clicked DIV! Clicked button
+//Senza il true Clicked button Clicked DIV!
+

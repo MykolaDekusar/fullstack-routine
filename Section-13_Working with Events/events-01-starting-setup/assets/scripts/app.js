@@ -18,54 +18,57 @@ class DOMHelper {
 
 /**
  * COMPONENTE UI: Tooltip
- * Gestisce il ciclo di vita (creazione -> visualizzazione -> distruzione) del popup informativo.
+ * Gestisce il ciclo di vita e il posizionamento "sticky"
  */
 class Tooltip {
-  constructor(itemId, closeNotifier) {
-    const projectItemElement = document.getElementById(itemId);
-    // Recuperiamo i dati memorizzati nell'attributo data-extra-info dell'HTML
-    this.extraInfo = projectItemElement.dataset.extraInfo;
+  constructor(hostElement, closeNotifier, text) {
+    this.hostElement = hostElement; // Salviamo il riferimento al bottone cliccato
+    this.text = text;
     this.closeNotifier = closeNotifier;
   }
 
-  // Creazione dinamica degli stili via JS
   styleToolTip() {
     const toolTipElement = document.createElement("div");
     toolTipElement.className = "card";
 
-    // Object.assign è un modo rapido per impostare più proprietà CSS contemporaneamente
+    // Applichiamo gli stili per renderlo Sticky e posizionarlo
     Object.assign(toolTipElement.style, {
-      textAlign: "center",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: "15px",
+      position: "absolute",
+      zIndex: "100",
       cursor: "pointer",
-      position: "relative", // Assicuriamoci che si posizioni bene
-      zIndex: "10",
+      padding: "1rem",
+      backgroundColor: "rgb(246, 213, 255)",
+      boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+      borderRadius: "8px",
     });
 
     this.element = toolTipElement;
     return toolTipElement;
   }
 
-  // Metodo per rimuovere il componente e pulire lo stato del genitore
   detach() {
     if (this.element) {
       this.element.remove();
-      this.closeNotifier(); // Fondamentale: informa il ProjectItem che può riaprirne un altro
+      this.closeNotifier();
     }
   }
 
   showToolTip() {
     const styledToolTip = this.styleToolTip();
-    const header = document.querySelector("header");
-    styledToolTip.textContent = this.extraInfo;
+    styledToolTip.textContent = this.text;
 
-    // Inseriamo il tooltip subito dopo l'header (logica specifica di questo esercizio)
-    header.insertAdjacentElement("afterend", styledToolTip);
+    // Troviamo il bottone dentro il progetto per capire dove farlo apparire
+    const btn = this.hostElement.querySelector(".alt");
 
-    // .bind(this) assicura che quando clicchiamo, "this" dentro detach sia l'oggetto Tooltip
+    // Calcoliamo la posizione: "Sotto il bottone"
+    // Usiamo offsetTop e offsetHeight che sono riferiti al genitore relativo
+    const y = btn.offsetTop + btn.offsetHeight + 10;
+
+    styledToolTip.style.top = y + "px";
+
+    // AGGIUNTA FONDAMENTALE: Lo appendiamo dentro il ProjectItem (hostElement)
+    this.hostElement.append(styledToolTip);
+
     styledToolTip.addEventListener("click", this.detach.bind(this));
   }
 }
@@ -80,6 +83,9 @@ class ProjectItem {
   constructor(id, updateProjectListFunction) {
     this.id = id;
     this.updateProjectListHandler = updateProjectListFunction;
+    // Prepariamo il CSS del <li> affinché faccia da "ancora"
+    const projectItemElement = document.getElementById(this.id);
+    projectItemElement.style.position = 'relative';
     this.connectMoreInfoBtn();
     this.connectSwitchBtn();
     this.connectDrag();
@@ -90,10 +96,14 @@ class ProjectItem {
     if (this.hasTooltip) {
       this.tooltipInstance.detach();
     } else {
-      // Creiamo una nuova istanza e passiamo una callback per resettare lo stato al close
-      this.tooltipInstance = new Tooltip(this.id, () => {
+      const projectItemElement = document.getElementById(this.id);
+      const text = projectItemElement.dataset.extraInfo;
+
+      // Passiamo l'intero elemento della lista (projectItemElement)
+      this.tooltipInstance = new Tooltip(projectItemElement, () => {
         this.hasTooltip = false;
-      });
+      }, text);
+      
       this.tooltipInstance.showToolTip();
       this.hasTooltip = true;
     }

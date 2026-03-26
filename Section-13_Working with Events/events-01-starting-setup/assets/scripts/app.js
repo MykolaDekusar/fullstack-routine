@@ -100,12 +100,10 @@ class ProjectItem {
   }
 
   connectDrag() {
-    document
-      .getElementById(this.id)
-      .addEventListener("dragstart", (event) => {
-        event.dataTransfer.setData('text/plain', this.id);
-        event.dataTransfer.effectAllowed = 'move';
-      });
+    document.getElementById(this.id).addEventListener("dragstart", (event) => {
+      event.dataTransfer.setData("text/plain", this.id);
+      event.dataTransfer.effectAllowed = "move";
+    });
   }
 
   connectMoreInfoBtn() {
@@ -147,6 +145,31 @@ class ProjectList {
     const prjItems = document.querySelectorAll(`#${type}-projects li`);
     this.createNewItems(prjItems);
     this.updateVisibility();
+    this.connectDroppable();
+  }
+
+  connectDroppable() {
+    const list = document.querySelector(`#${this.type}-projects ul`);
+    console.log(list);
+    list.addEventListener("dragenter", (event) => {
+      console.log(event.dataTransfer);
+      if (event.dataTransfer.types[0] === "text/plain") {
+        event.preventDefault();
+        list.parentElement.classList.add("droppable");
+      }
+    });
+    list.addEventListener("dragover", (event) => {
+      if (event.dataTransfer.types[0] === "text/plain") {
+        event.preventDefault();
+      }
+    });
+
+    list.addEventListener("dragleave", (event) => {
+      if(event.relatedTarget.closest(`#${this.type}-projects ul`) !== list){
+         list.parentElement.classList.remove('droppable');
+      }
+     
+    });
   }
 
   // Gestione dinamica dell'interfaccia: se non ci sono task, la sezione sparisce

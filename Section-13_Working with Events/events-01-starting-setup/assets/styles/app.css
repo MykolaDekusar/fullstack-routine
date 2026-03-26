@@ -122,3 +122,7 @@ button:active {
   color: white;
   margin: 0;
 }
+
+.droppable {
+  background-color: bisque;
+}

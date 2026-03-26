@@ -48,3 +48,16 @@ form {
 form label {
   font-size: 40px;
 }
+
+li {
+  text-align: center;
+  list-style: none;
+  border: 1px solid black;
+  margin: 10px 0px;
+  padding: 10px;
+}
+
+.selected {
+  background-color: red;
+  color: white;
+}

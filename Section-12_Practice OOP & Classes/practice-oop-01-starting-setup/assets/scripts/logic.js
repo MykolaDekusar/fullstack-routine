@@ -1,31 +1,39 @@
 /**
- * UTILITY: Gestione operazioni comuni sul DOM
+ * UTILITY: DOMHelper
+ * Una classe "cassetta degli attrezzi". Contiene metodi statici che non richiedono
+ * la creazione di un oggetto (new DOMHelper) per essere usati.
  */
 class DOMHelper {
   static moveElement(elementId, newDestinationSelector) {
     const element = document.getElementById(elementId);
     const destinationElement = document.querySelector(newDestinationSelector);
+    
+    // .append() sposta fisicamente l'elemento da un punto all'altro del DOM
     destinationElement.append(element);
-    element.scrollIntoView({behavior:'smooth'});
+    
+    // Migliora la UX portando l'elemento a schermo dopo lo spostamento
+    element.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
 /**
- * COMPONENTE UI: Gestisce la creazione e distruzione del Tooltip
+ * COMPONENTE UI: Tooltip
+ * Gestisce il ciclo di vita (creazione -> visualizzazione -> distruzione) del popup informativo.
  */
 class Tooltip {
   constructor(itemId, closeNotifier) {
     const projectItemElement = document.getElementById(itemId);
+    // Recuperiamo i dati memorizzati nell'attributo data-extra-info dell'HTML
     this.extraInfo = projectItemElement.dataset.extraInfo;
-    this.closeNotifier = closeNotifier; // Callback per avvisare il ProjectItem della chiusura
+    this.closeNotifier = closeNotifier; 
   }
 
-  // Definisce lo stile e crea l'elemento nel DOM
+  // Creazione dinamica degli stili via JS
   styleToolTip() {
     const toolTipElement = document.createElement("div");
     toolTipElement.className = "card";
 
-    // Applichiamo gli stili base
+    // Object.assign è un modo rapido per impostare più proprietà CSS contemporaneamente
     Object.assign(toolTipElement.style, {
       textAlign: "center",
       display: "flex",
@@ -33,38 +41,41 @@ class Tooltip {
       alignItems: "center",
       marginTop: "15px",
       cursor: "pointer",
+      position: "relative", // Assicuriamoci che si posizioni bene
+      zIndex: "10"
     });
 
     this.element = toolTipElement;
     return toolTipElement;
   }
 
-  // Rimuove l'elemento e resetta lo stato nel genitore
+  // Metodo per rimuovere il componente e pulire lo stato del genitore
   detach() {
     if (this.element) {
       this.element.remove();
-      this.closeNotifier();
+      this.closeNotifier(); // Fondamentale: informa il ProjectItem che può riaprirne un altro
     }
   }
 
-  // Assembla e mostra il tooltip dopo l'header
   showToolTip() {
     const styledToolTip = this.styleToolTip();
     const header = document.querySelector("header");
     styledToolTip.textContent = this.extraInfo;
 
+    // Inseriamo il tooltip subito dopo l'header (logica specifica di questo esercizio)
     header.insertAdjacentElement("afterend", styledToolTip);
 
-    // Chiudiamo il tooltip se l'utente ci clicca sopra direttamente
+    // .bind(this) assicura che quando clicchiamo, "this" dentro detach sia l'oggetto Tooltip
     styledToolTip.addEventListener("click", this.detach.bind(this));
   }
 }
 
 /**
- * CONTROLLER: Gestisce la logica del singolo progetto (Bottoni e Stato)
+ * CONTROLLER: ProjectItem
+ * Rappresenta il singolo progetto. È il "cuore" della logica del task.
  */
 class ProjectItem {
-  hasTooltip = false; // Stato interno per il toggle del tooltip
+  hasTooltip = false; 
 
   constructor(id, updateProjectListFunction) {
     this.id = id;
@@ -73,126 +84,120 @@ class ProjectItem {
     this.connectSwitchBtn();
   }
 
-  // Logica Toggle: se esiste lo chiude, altrimenti lo crea
+  // Logica Toggle: gestisce l'apertura/chiusura intelligente
   showMoreInfoHandler() {
     if (this.hasTooltip) {
       this.tooltipInstance.detach();
     } else {
+      // Creiamo una nuova istanza e passiamo una callback per resettare lo stato al close
       this.tooltipInstance = new Tooltip(this.id, () => {
-        this.hasTooltip = false; // Reset dello stato quando il tooltip viene rimosso
+        this.hasTooltip = false; 
       });
       this.tooltipInstance.showToolTip();
       this.hasTooltip = true;
     }
   }
 
-  // Collega il bottone "More Info"
   connectMoreInfoBtn() {
     const projectItemElement = document.getElementById(this.id);
     const moreBtn = projectItemElement.querySelector(`.alt`);
     moreBtn.addEventListener("click", this.showMoreInfoHandler.bind(this));
   }
 
-  // Aggiorna la funzione di switch quando l'elemento cambia lista
+  // Chiamato quando il task si sposta tra le liste
   update(updateProjectListFn, type) {
     this.updateProjectListHandler = updateProjectListFn;
     const projectItemElement = document.getElementById(this.id);
     const switchBtn = projectItemElement.querySelector("button:last-of-type");
+    
+    // Aggiorniamo dinamicamente il testo del bottone
     switchBtn.textContent = type === "active" ? "Finish" : "Activate";
   }
 
-  // Collega il bottone di spostamento (Activate/Finish)
   connectSwitchBtn() {
     const projectItemElement = document.getElementById(this.id);
     const switchBtn = projectItemElement.querySelector(`button:last-of-type`);
     switchBtn.addEventListener("click", () => {
+      // Chiamiamo la funzione di switch passata dal manager (ProjectList)
       this.updateProjectListHandler(this.id);
     });
   }
 }
 
 /**
- * MANAGER: Gestisce l'insieme dei progetti in una colonna
+ * MANAGER: ProjectList
+ * Gestisce l'intera colonna (Active o Finished).
  */
 class ProjectList {
   projects = [];
 
   constructor(type) {
     this.type = type;
-    // Troviamo la sezione intera (l'elemento <section>)
     this.section = document.getElementById(`${type}-projects`);
     const prjItems = document.querySelectorAll(`#${type}-projects li`);
     this.createNewItems(prjItems);
-    // Controllo iniziale: se la lista è vuota all'avvio, sparisce subito
     this.updateVisibility();
   }
-  // Mostra la lista oppure nascondila
+
+  // Gestione dinamica dell'interfaccia: se non ci sono task, la sezione sparisce
   updateVisibility() {
-    if (this.projects.length === 0) {
-      this.section.style.display = "none";
-    } else {
-      this.section.style.display = "block";
-    }
+    this.section.style.display = this.projects.length === 0 ? "none" : "block";
   }
 
-  // Riceve la funzione da chiamare per spostare il progetto all'altra lista
   setSwitchHandlerFunction(switchHandlerFunction) {
     this.switchHandler = switchHandlerFunction;
   }
 
-  // Inizializza i ProjectItem per ogni <li> trovato
   createNewItems(prjItems) {
     for (const prjItem of prjItems) {
       this.projects.push(
-        new ProjectItem(prjItem.id, this.switchProject.bind(this)),
+        new ProjectItem(prjItem.id, this.switchProject.bind(this))
       );
     }
   }
 
-  // Aggiunge un progetto esistente a questa lista
   addProject(project) {
     this.projects.push(project);
     DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
+    
+    // Aggiorniamo il task con le nuove funzioni di callback specifiche della nuova lista
     project.update(this.switchProject.bind(this), this.type);
-    // Quando aggiungiamo un progetto, assicuriamoci che la sezione sia visibile
     this.updateVisibility();
   }
 
-  // Rimuove il progetto da questa lista e lo "passa" all'altra
   switchProject(projectId) {
     const projectToMove = this.projects.find((item) => item.id === projectId);
+    
+    // Eseguiamo lo switch tramite la funzione collegata in App.init
     this.switchHandler(projectToMove);
+    
+    // Rimuoviamo il progetto dalla lista attuale (immutabilità simulata)
     this.projects = this.projects.filter((item) => item.id !== projectId);
-    // Quando togliamo un progetto, controlliamo se la lista è diventata vuota
     this.updateVisibility();
   }
 }
 
 /**
- * ORCHESTRATORE: Avvia l'applicazione
+ * ORCHESTRATORE: App
+ * Il punto di partenza che "monta" l'applicazione.
  */
 class App {
   static init() {
     const activeProjects = new ProjectList("active");
     const finishedProjects = new ProjectList("finished");
 
-    // "Colleghiamo" le due liste: quando una finisce, passa il progetto all'altra
+    // CROSS-COMMUNICATION: Colleghiamo le due liste
+    // Quando 'active' finisce un task, chiama 'addProject' di 'finished'
     activeProjects.setSwitchHandlerFunction(
       finishedProjects.addProject.bind(finishedProjects),
     );
-    finishedProjects.setSwitchHandlerFunction(
-      activeProjects.setSwitchHandlerFunction.bind(activeProjects),
-    );
-
-    // Correzione al volo: il secondo deve puntare ad addProject
+    
+    // E viceversa per i task finiti che tornano attivi
     finishedProjects.setSwitchHandlerFunction(
       activeProjects.addProject.bind(activeProjects),
     );
-
-    // const dynamicScript = document.createElement('script');
-    // dynamicScript.textContent = 'alert("Hello There!")';
-    // document.head.append(dynamicScript);
   }
 }
 
+// Start!
 App.init();

@@ -1,189 +1,203 @@
+/**
+ * UTILITY: DOMHelper
+ * Una classe "cassetta degli attrezzi". Contiene metodi statici che non richiedono
+ * la creazione di un oggetto (new DOMHelper) per essere usati.
+ */
 class DOMHelper {
-  static clearEventListeners(element) {
-    const clonedElement = element.cloneNode(true);
-    element.replaceWith(clonedElement);
-    return clonedElement;
-  }
-
   static moveElement(elementId, newDestinationSelector) {
     const element = document.getElementById(elementId);
     const destinationElement = document.querySelector(newDestinationSelector);
+    
+    // .append() sposta fisicamente l'elemento da un punto all'altro del DOM
     destinationElement.append(element);
+    
+    // Migliora la UX portando l'elemento a schermo dopo lo spostamento
     element.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
-class Component {
-  constructor(hostElementId, insertBefore = false) {
-    if (hostElementId) {
-      this.hostElement = document.getElementById(hostElementId);
-    } else {
-      this.hostElement = document.body;
-    }
-    this.insertBefore = insertBefore;
+/**
+ * COMPONENTE UI: Tooltip
+ * Gestisce il ciclo di vita (creazione -> visualizzazione -> distruzione) del popup informativo.
+ */
+class Tooltip {
+  constructor(itemId, closeNotifier) {
+    const projectItemElement = document.getElementById(itemId);
+    // Recuperiamo i dati memorizzati nell'attributo data-extra-info dell'HTML
+    this.extraInfo = projectItemElement.dataset.extraInfo;
+    this.closeNotifier = closeNotifier; 
   }
 
+  // Creazione dinamica degli stili via JS
+  styleToolTip() {
+    const toolTipElement = document.createElement("div");
+    toolTipElement.className = "card";
+
+    // Object.assign è un modo rapido per impostare più proprietà CSS contemporaneamente
+    Object.assign(toolTipElement.style, {
+      textAlign: "center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: "15px",
+      cursor: "pointer",
+      position: "relative", // Assicuriamoci che si posizioni bene
+      zIndex: "10"
+    });
+
+    this.element = toolTipElement;
+    return toolTipElement;
+  }
+
+  // Metodo per rimuovere il componente e pulire lo stato del genitore
   detach() {
     if (this.element) {
       this.element.remove();
-      // this.element.parentElement.removeChild(this.element);
+      this.closeNotifier(); // Fondamentale: informa il ProjectItem che può riaprirne un altro
     }
   }
 
-  attach() {
-    this.hostElement.insertAdjacentElement(
-      this.insertBefore ? 'afterbegin' : 'beforeend',
-      this.element
-    );
+  showToolTip() {
+    const styledToolTip = this.styleToolTip();
+    const header = document.querySelector("header");
+    styledToolTip.textContent = this.extraInfo;
+
+    // Inseriamo il tooltip subito dopo l'header (logica specifica di questo esercizio)
+    header.insertAdjacentElement("afterend", styledToolTip);
+
+    // .bind(this) assicura che quando clicchiamo, "this" dentro detach sia l'oggetto Tooltip
+    styledToolTip.addEventListener("click", this.detach.bind(this));
   }
 }
 
-class Tooltip extends Component {
-  constructor(closeNotifierFunction, text, hostElementId) {
-    super(hostElementId);
-    this.closeNotifier = closeNotifierFunction;
-    this.text = text;
-    this.create();
-  }
-
-  closeTooltip = () => {
-    this.detach();
-    this.closeNotifier();
-  };
-
-  create() {
-    const tooltipElement = document.createElement('div');
-    tooltipElement.className = 'card';
-    const tooltipTemplate = document.getElementById('tooltip');
-    const tooltipBody = document.importNode(tooltipTemplate.content, true);
-    tooltipBody.querySelector('p').textContent = this.text;
-    tooltipElement.append(tooltipBody);
-
-    const hostElPosLeft = this.hostElement.offsetLeft;
-    const hostElPosTop = this.hostElement.offsetTop;
-    const hostElHeight = this.hostElement.clientHeight;
-    const parentElementScrolling = this.hostElement.parentElement.scrollTop;
-
-    const x = hostElPosLeft + 20;
-    const y = hostElPosTop + hostElHeight - parentElementScrolling - 10;
-
-    tooltipElement.style.position = 'absolute';
-    tooltipElement.style.left = x + 'px'; // 500px
-    tooltipElement.style.top = y + 'px';
-
-    tooltipElement.addEventListener('click', this.closeTooltip);
-    this.element = tooltipElement;
-  }
-}
-
+/**
+ * CONTROLLER: ProjectItem
+ * Rappresenta il singolo progetto. È il "cuore" della logica del task.
+ */
 class ProjectItem {
-  hasActiveTooltip = false;
+  hasTooltip = false; 
 
-  constructor(id, updateProjectListsFunction, type) {
+  constructor(id, updateProjectListFunction) {
     this.id = id;
-    this.updateProjectListsHandler = updateProjectListsFunction;
-    this.connectMoreInfoButton();
-    this.connectSwitchButton(type);
+    this.updateProjectListHandler = updateProjectListFunction;
+    this.connectMoreInfoBtn();
+    this.connectSwitchBtn();
   }
 
+  // Logica Toggle: gestisce l'apertura/chiusura intelligente
   showMoreInfoHandler() {
-    if (this.hasActiveTooltip) {
-      return;
+    if (this.hasTooltip) {
+      this.tooltipInstance.detach();
+    } else {
+      // Creiamo una nuova istanza e passiamo una callback per resettare lo stato al close
+      this.tooltipInstance = new Tooltip(this.id, () => {
+        this.hasTooltip = false; 
+      });
+      this.tooltipInstance.showToolTip();
+      this.hasTooltip = true;
     }
-    const projectElement = document.getElementById(this.id);
-    const tooltipText = projectElement.dataset.extraInfo;
-    const tooltip = new Tooltip(
-      () => {
-        this.hasActiveTooltip = false;
-      },
-      tooltipText,
-      this.id
-    );
-    tooltip.attach();
-    this.hasActiveTooltip = true;
   }
 
-  connectMoreInfoButton() {
+  connectMoreInfoBtn() {
     const projectItemElement = document.getElementById(this.id);
-    const moreInfoBtn = projectItemElement.querySelector(
-      'button:first-of-type'
-    );
-    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler.bind(this));
+    const moreBtn = projectItemElement.querySelector(`.alt`);
+    moreBtn.addEventListener("click", this.showMoreInfoHandler.bind(this));
   }
 
-  connectSwitchButton(type) {
+  // Chiamato quando il task si sposta tra le liste
+  update(updateProjectListFn, type) {
+    this.updateProjectListHandler = updateProjectListFn;
     const projectItemElement = document.getElementById(this.id);
-    let switchBtn = projectItemElement.querySelector('button:last-of-type');
-    switchBtn = DOMHelper.clearEventListeners(switchBtn);
-    switchBtn.textContent = type === 'active' ? 'Finish' : 'Activate';
-    switchBtn.addEventListener(
-      'click',
-      this.updateProjectListsHandler.bind(null, this.id)
-    );
+    const switchBtn = projectItemElement.querySelector("button:last-of-type");
+    
+    // Aggiorniamo dinamicamente il testo del bottone
+    switchBtn.textContent = type === "active" ? "Finish" : "Activate";
   }
 
-  update(updateProjectListsFn, type) {
-    this.updateProjectListsHandler = updateProjectListsFn;
-    this.connectSwitchButton(type);
+  connectSwitchBtn() {
+    const projectItemElement = document.getElementById(this.id);
+    const switchBtn = projectItemElement.querySelector(`button:last-of-type`);
+    switchBtn.addEventListener("click", () => {
+      // Chiamiamo la funzione di switch passata dal manager (ProjectList)
+      this.updateProjectListHandler(this.id);
+    });
   }
 }
 
+/**
+ * MANAGER: ProjectList
+ * Gestisce l'intera colonna (Active o Finished).
+ */
 class ProjectList {
   projects = [];
 
   constructor(type) {
     this.type = type;
+    this.section = document.getElementById(`${type}-projects`);
     const prjItems = document.querySelectorAll(`#${type}-projects li`);
-    for (const prjItem of prjItems) {
-      this.projects.push(
-        new ProjectItem(prjItem.id, this.switchProject.bind(this), this.type)
-      );
-    }
-    console.log(this.projects);
+    this.createNewItems(prjItems);
+    this.updateVisibility();
+  }
+
+  // Gestione dinamica dell'interfaccia: se non ci sono task, la sezione sparisce
+  updateVisibility() {
+    this.section.style.display = this.projects.length === 0 ? "none" : "block";
   }
 
   setSwitchHandlerFunction(switchHandlerFunction) {
     this.switchHandler = switchHandlerFunction;
   }
 
+  createNewItems(prjItems) {
+    for (const prjItem of prjItems) {
+      this.projects.push(
+        new ProjectItem(prjItem.id, this.switchProject.bind(this))
+      );
+    }
+  }
+
   addProject(project) {
     this.projects.push(project);
     DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
+    
+    // Aggiorniamo il task con le nuove funzioni di callback specifiche della nuova lista
     project.update(this.switchProject.bind(this), this.type);
+    this.updateVisibility();
   }
 
   switchProject(projectId) {
-    // const projectIndex = this.projects.findIndex(p => p.id === projectId);
-    // this.projects.splice(projectIndex, 1);
-    this.switchHandler(this.projects.find(p => p.id === projectId));
-    this.projects = this.projects.filter(p => p.id !== projectId);
+    const projectToMove = this.projects.find((item) => item.id === projectId);
+    
+    // Eseguiamo lo switch tramite la funzione collegata in App.init
+    this.switchHandler(projectToMove);
+    
+    // Rimuoviamo il progetto dalla lista attuale (immutabilità simulata)
+    this.projects = this.projects.filter((item) => item.id !== projectId);
+    this.updateVisibility();
   }
 }
 
+/**
+ * ORCHESTRATORE: App
+ * Il punto di partenza che "monta" l'applicazione.
+ */
 class App {
   static init() {
-    const activeProjectsList = new ProjectList('active');
-    const finishedProjectsList = new ProjectList('finished');
-    activeProjectsList.setSwitchHandlerFunction(
-      finishedProjectsList.addProject.bind(finishedProjectsList)
+    const activeProjects = new ProjectList("active");
+    const finishedProjects = new ProjectList("finished");
+
+    // CROSS-COMMUNICATION: Colleghiamo le due liste
+    // Quando 'active' finisce un task, chiama 'addProject' di 'finished'
+    activeProjects.setSwitchHandlerFunction(
+      finishedProjects.addProject.bind(finishedProjects),
     );
-    finishedProjectsList.setSwitchHandlerFunction(
-      activeProjectsList.addProject.bind(activeProjectsList)
+    
+    // E viceversa per i task finiti che tornano attivi
+    finishedProjects.setSwitchHandlerFunction(
+      activeProjects.addProject.bind(activeProjects),
     );
-
-    const timerId = setTimeout(this.startAnalytics, 3000);
-
-    document.getElementById('stop-analytics-btn').addEventListener('click', () => {
-      clearTimeout(timerId);
-    });
-  }
-
-  static startAnalytics() {
-    const analyticsScript = document.createElement('script');
-    analyticsScript.src = 'assets/scripts/analytics.js';
-    analyticsScript.defer = true;
-    document.head.append(analyticsScript);
   }
 }
 
+// Start!
 App.init();

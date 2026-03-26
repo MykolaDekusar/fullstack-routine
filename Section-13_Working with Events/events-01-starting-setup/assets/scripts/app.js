@@ -247,6 +247,71 @@ class ProjectList {
   }
 }
 
+class ProjectInput {
+  constructor(activeList) {
+    this.activeList = activeList;
+    
+    // Elementi del DOM
+    this.formContainer = document.getElementById('form-container');
+    this.openBtn = document.getElementById('open-form-btn');
+    this.cancelBtn = document.getElementById('cancel-form-btn');
+    this.form = document.getElementById('new-project-form');
+    
+    // Input fields
+    this.titleInput = document.getElementById('title');
+    this.descInput = document.getElementById('description');
+    this.extraInput = document.getElementById('extra');
+
+    // Event Listeners
+    this.openBtn.addEventListener('click', this.toggleForm.bind(this));
+    this.cancelBtn.addEventListener('click', this.toggleForm.bind(this));
+    this.form.addEventListener('submit', this.submitHandler.bind(this));
+  }
+
+  toggleForm() {
+    // Switchiamo la visibilità tra bottone "Add" e il Form completo
+    this.formContainer.classList.toggle('hidden');
+    this.openBtn.classList.toggle('hidden');
+    
+    // Se stiamo aprendo il form, diamo subito il focus al titolo
+    if (!this.formContainer.classList.contains('hidden')) {
+        this.titleInput.focus();
+    }
+  }
+
+  submitHandler(event) {
+    event.preventDefault();
+
+    const title = this.titleInput.value;
+    const description = this.descInput.value;
+    const extra = this.extraInput.value;
+
+    const id = 'p' + Date.now(); 
+
+    const newPrjElement = document.createElement('li');
+    newPrjElement.id = id;
+    newPrjElement.className = 'card';
+    newPrjElement.draggable = true;
+    newPrjElement.dataset.extraInfo = extra;
+    newPrjElement.innerHTML = `
+      <h2>${title}</h2>
+      <p>${description}</p>
+      <button class="alt">More Info</button>
+      <button>Finish</button>
+    `;
+
+    document.querySelector(`#active-projects ul`).append(newPrjElement);
+
+    const newProjectItem = new ProjectItem(id, this.activeList.switchProject.bind(this.activeList));
+    this.activeList.projects.push(newProjectItem);
+    this.activeList.updateVisibility();
+
+    // Puliamo e CHIUDIAMO il form dopo l'invio
+    this.form.reset();
+    this.toggleForm();
+  }
+}
+
 /**
  * ORCHESTRATORE: App
  * Il punto di partenza che "monta" l'applicazione.
@@ -266,6 +331,8 @@ class App {
     finishedProjects.setSwitchHandlerFunction(
       activeProjects.addProject.bind(activeProjects),
     );
+    // INIZIALIZZA IL FORM DI INPUT
+    new ProjectInput(activeProjects);
   }
 }
 

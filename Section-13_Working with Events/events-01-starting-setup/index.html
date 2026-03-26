@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -16,6 +16,31 @@
     <header id="main-header">
       <h1>Project Planner</h1>
     </header>
+    <section id="input-section" class="card">
+  <button id="open-form-btn">Add New Task +</button>
+
+  <div id="form-container" class="hidden">
+    <h2>Create New Project</h2>
+    <form id="new-project-form">
+      <div class="control">
+        <label for="title">Task Title</label>
+        <input type="text" id="title" placeholder="Es: Buy proteins..." required>
+      </div>
+      <div class="control">
+        <label for="description">Description</label>
+        <textarea id="description" rows="3" placeholder="Task details..." required></textarea>
+      </div>
+      <div class="control">
+        <label for="extra">Extra Info (Tooltip)</label>
+        <input type="text" id="extra" placeholder="Will appear on click">
+      </div>
+      <div class="form-actions">
+        <button type="submit">Create Task</button>
+        <button type="button" id="cancel-form-btn" class="alt">Cancel</button>
+      </div>
+    </form>
+  </div>
+</section>
     <section id="active-projects">
       <header>
         <h2>Active Projects</h2>
@@ -66,8 +91,5 @@
         </li>
       </ul>
     </section>
-    <footer>
-      <button id="stop-analytics-btn">Stop Analytics</button>
-    </footer>
   </body>
 </html>

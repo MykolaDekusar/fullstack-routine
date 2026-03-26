@@ -7,12 +7,12 @@ class DOMHelper {
   static moveElement(elementId, newDestinationSelector) {
     const element = document.getElementById(elementId);
     const destinationElement = document.querySelector(newDestinationSelector);
-    
+
     // .append() sposta fisicamente l'elemento da un punto all'altro del DOM
     destinationElement.append(element);
-    
+
     // Migliora la UX portando l'elemento a schermo dopo lo spostamento
-    element.scrollIntoView({ behavior: 'smooth' });
+    element.scrollIntoView({ behavior: "smooth" });
   }
 }
 
@@ -25,7 +25,7 @@ class Tooltip {
     const projectItemElement = document.getElementById(itemId);
     // Recuperiamo i dati memorizzati nell'attributo data-extra-info dell'HTML
     this.extraInfo = projectItemElement.dataset.extraInfo;
-    this.closeNotifier = closeNotifier; 
+    this.closeNotifier = closeNotifier;
   }
 
   // Creazione dinamica degli stili via JS
@@ -42,7 +42,7 @@ class Tooltip {
       marginTop: "15px",
       cursor: "pointer",
       position: "relative", // Assicuriamoci che si posizioni bene
-      zIndex: "10"
+      zIndex: "10",
     });
 
     this.element = toolTipElement;
@@ -75,13 +75,14 @@ class Tooltip {
  * Rappresenta il singolo progetto. È il "cuore" della logica del task.
  */
 class ProjectItem {
-  hasTooltip = false; 
+  hasTooltip = false;
 
   constructor(id, updateProjectListFunction) {
     this.id = id;
     this.updateProjectListHandler = updateProjectListFunction;
     this.connectMoreInfoBtn();
     this.connectSwitchBtn();
+    this.connectDrag();
   }
 
   // Logica Toggle: gestisce l'apertura/chiusura intelligente
@@ -91,11 +92,20 @@ class ProjectItem {
     } else {
       // Creiamo una nuova istanza e passiamo una callback per resettare lo stato al close
       this.tooltipInstance = new Tooltip(this.id, () => {
-        this.hasTooltip = false; 
+        this.hasTooltip = false;
       });
       this.tooltipInstance.showToolTip();
       this.hasTooltip = true;
     }
+  }
+
+  connectDrag() {
+    document
+      .getElementById(this.id)
+      .addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData('text/plain', this.id);
+        event.dataTransfer.effectAllowed = 'move';
+      });
   }
 
   connectMoreInfoBtn() {
@@ -109,7 +119,7 @@ class ProjectItem {
     this.updateProjectListHandler = updateProjectListFn;
     const projectItemElement = document.getElementById(this.id);
     const switchBtn = projectItemElement.querySelector("button:last-of-type");
-    
+
     // Aggiorniamo dinamicamente il testo del bottone
     switchBtn.textContent = type === "active" ? "Finish" : "Activate";
   }
@@ -151,7 +161,7 @@ class ProjectList {
   createNewItems(prjItems) {
     for (const prjItem of prjItems) {
       this.projects.push(
-        new ProjectItem(prjItem.id, this.switchProject.bind(this))
+        new ProjectItem(prjItem.id, this.switchProject.bind(this)),
       );
     }
   }
@@ -159,7 +169,7 @@ class ProjectList {
   addProject(project) {
     this.projects.push(project);
     DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
-    
+
     // Aggiorniamo il task con le nuove funzioni di callback specifiche della nuova lista
     project.update(this.switchProject.bind(this), this.type);
     this.updateVisibility();
@@ -167,10 +177,10 @@ class ProjectList {
 
   switchProject(projectId) {
     const projectToMove = this.projects.find((item) => item.id === projectId);
-    
+
     // Eseguiamo lo switch tramite la funzione collegata in App.init
     this.switchHandler(projectToMove);
-    
+
     // Rimuoviamo il progetto dalla lista attuale (immutabilità simulata)
     this.projects = this.projects.filter((item) => item.id !== projectId);
     this.updateVisibility();
@@ -191,7 +201,7 @@ class App {
     activeProjects.setSwitchHandlerFunction(
       finishedProjects.addProject.bind(finishedProjects),
     );
-    
+
     // E viceversa per i task finiti che tornano attivi
     finishedProjects.setSwitchHandlerFunction(
       activeProjects.addProject.bind(activeProjects),

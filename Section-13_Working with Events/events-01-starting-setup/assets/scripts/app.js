@@ -100,8 +100,12 @@ class ProjectItem {
   }
 
   connectDrag() {
-    document.getElementById(this.id).addEventListener("dragstart", (event) => {
+    const el = document.getElementById(this.id);
+    // Assicurati che nell'HTML l'elemento abbia l'attributo draggable="true"
+    el.addEventListener("dragstart", (event) => {
+      // Memorizziamo l'ID dell'elemento nel "pacchetto dati" del trascinamento
       event.dataTransfer.setData("text/plain", this.id);
+      // Specifichiamo l'intenzione: stiamo "muovendo", non copiando
       event.dataTransfer.effectAllowed = "move";
     });
   }
@@ -150,25 +154,48 @@ class ProjectList {
 
   connectDroppable() {
     const list = document.querySelector(`#${this.type}-projects ul`);
-    console.log(list);
+
+    // dragenter: L'elemento entra nell'area di drop
     list.addEventListener("dragenter", (event) => {
-      console.log(event.dataTransfer);
       if (event.dataTransfer.types[0] === "text/plain") {
-        event.preventDefault();
-        list.parentElement.classList.add("droppable");
-      }
-    });
-    list.addEventListener("dragover", (event) => {
-      if (event.dataTransfer.types[0] === "text/plain") {
-        event.preventDefault();
+        event.preventDefault(); // Necessario per permettere il drop
+        list.parentElement.classList.add("droppable"); // Feedback visivo
       }
     });
 
-    list.addEventListener("dragleave", (event) => {
-      if(event.relatedTarget.closest(`#${this.type}-projects ul`) !== list){
-         list.parentElement.classList.remove('droppable');
+    // dragover: L'elemento è sopra l'area di drop (scatta ogni pochi millisecondi)
+    list.addEventListener("dragover", (event) => {
+      if (event.dataTransfer.types[0] === "text/plain") {
+        event.preventDefault(); // CRITICO: Senza questo il drop non funzionerà
       }
-     
+    });
+
+    // dragleave: L'elemento esce o il drop viene annullato
+    list.addEventListener("dragleave", (event) => {
+      // Verifichiamo che stiamo uscendo davvero dalla lista e non entrando in un figlio (es. un <li>)
+      if (event.relatedTarget.closest(`#${this.type}-projects ul`) !== list) {
+        list.parentElement.classList.remove("droppable");
+      }
+    });
+
+    // drop: L'elemento viene rilasciato
+    list.addEventListener("drop", (event) => {
+      const prjId = event.dataTransfer.getData("text/plain");
+
+      // Controllo di sicurezza: se il progetto è già in questa lista, ignoriamo
+      if (this.projects.find((p) => p.id === prjId)) {
+        list.parentElement.classList.remove("droppable");
+        return;
+      }
+
+      // TRUCCO: Invece di gestire la logica qui, "clicchiamo" il tasto switch dell'elemento
+      document
+        .getElementById(prjId)
+        .querySelector("button:last-of-type")
+        .click();
+
+      list.parentElement.classList.remove("droppable");
+      event.preventDefault();
     });
   }
 

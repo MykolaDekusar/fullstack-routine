@@ -85,7 +85,7 @@ class ProjectItem {
     this.updateProjectListHandler = updateProjectListFunction;
     // Prepariamo il CSS del <li> affinché faccia da "ancora"
     const projectItemElement = document.getElementById(this.id);
-    projectItemElement.style.position = 'relative';
+    projectItemElement.style.position = "relative";
     this.connectMoreInfoBtn();
     this.connectSwitchBtn();
     this.connectDrag();
@@ -100,10 +100,14 @@ class ProjectItem {
       const text = projectItemElement.dataset.extraInfo;
 
       // Passiamo l'intero elemento della lista (projectItemElement)
-      this.tooltipInstance = new Tooltip(projectItemElement, () => {
-        this.hasTooltip = false;
-      }, text);
-      
+      this.tooltipInstance = new Tooltip(
+        projectItemElement,
+        () => {
+          this.hasTooltip = false;
+        },
+        text,
+      );
+
       this.tooltipInstance.showToolTip();
       this.hasTooltip = true;
     }
@@ -156,10 +160,51 @@ class ProjectList {
   constructor(type) {
     this.type = type;
     this.section = document.getElementById(`${type}-projects`);
+    //Carichiamo eventuali dati dal LocalStorage all'avvio
+    this.loadFromStorage();
     const prjItems = document.querySelectorAll(`#${type}-projects li`);
     this.createNewItems(prjItems);
     this.updateVisibility();
     this.connectDroppable();
+  }
+  // Metodo per salvare lo stato attuale di questa lista
+  saveToStorage() {
+    const data = [];
+    for (const prj of this.projects) {
+      const el = document.getElementById(prj.id);
+      data.push({
+        id: prj.id,
+        title: el.querySelector("h2").textContent,
+        description: el.querySelector("p").textContent,
+        extraInfo: el.dataset.extraInfo,
+      });
+    }
+    localStorage.setItem(`${this.type}Projects`, JSON.stringify(data));
+  }
+
+  // Metodo per iniettare nel DOM i dati salvati prima di creare i ProjectItem
+  loadFromStorage() {
+    const storedData = localStorage.getItem(`${this.type}Projects`);
+    if (!storedData) return;
+
+    const parsedData = JSON.parse(storedData);
+    const list = this.section.querySelector("ul");
+    list.innerHTML = ""; // Puliamo l'HTML statico per far spazio ai dati salvati
+
+    for (const prj of parsedData) {
+      const li = document.createElement("li");
+      li.id = prj.id;
+      li.className = "card";
+      li.draggable = true;
+      li.dataset.extraInfo = prj.extraInfo;
+      li.innerHTML = `
+        <h2>${prj.title}</h2>
+        <p>${prj.description}</p>
+        <button class="alt">More Info</button>
+        <button>${this.type === "active" ? "Finish" : "Activate"}</button>
+      `;
+      list.append(li);
+    }
   }
 
   connectDroppable() {
@@ -233,6 +278,8 @@ class ProjectList {
     // Aggiorniamo il task con le nuove funzioni di callback specifiche della nuova lista
     project.update(this.switchProject.bind(this), this.type);
     this.updateVisibility();
+    // SALVA dopo l'aggiunta
+    this.saveToStorage();
   }
 
   switchProject(projectId) {
@@ -244,38 +291,40 @@ class ProjectList {
     // Rimuoviamo il progetto dalla lista attuale (immutabilità simulata)
     this.projects = this.projects.filter((item) => item.id !== projectId);
     this.updateVisibility();
+    // SALVA dopo la rimozione (lo switch salverà automaticamente nell'altra lista via addProject)
+    this.saveToStorage();
   }
 }
 
 class ProjectInput {
   constructor(activeList) {
     this.activeList = activeList;
-    
+
     // Elementi del DOM
-    this.formContainer = document.getElementById('form-container');
-    this.openBtn = document.getElementById('open-form-btn');
-    this.cancelBtn = document.getElementById('cancel-form-btn');
-    this.form = document.getElementById('new-project-form');
-    
+    this.formContainer = document.getElementById("form-container");
+    this.openBtn = document.getElementById("open-form-btn");
+    this.cancelBtn = document.getElementById("cancel-form-btn");
+    this.form = document.getElementById("new-project-form");
+
     // Input fields
-    this.titleInput = document.getElementById('title');
-    this.descInput = document.getElementById('description');
-    this.extraInput = document.getElementById('extra');
+    this.titleInput = document.getElementById("title");
+    this.descInput = document.getElementById("description");
+    this.extraInput = document.getElementById("extra");
 
     // Event Listeners
-    this.openBtn.addEventListener('click', this.toggleForm.bind(this));
-    this.cancelBtn.addEventListener('click', this.toggleForm.bind(this));
-    this.form.addEventListener('submit', this.submitHandler.bind(this));
+    this.openBtn.addEventListener("click", this.toggleForm.bind(this));
+    this.cancelBtn.addEventListener("click", this.toggleForm.bind(this));
+    this.form.addEventListener("submit", this.submitHandler.bind(this));
   }
 
   toggleForm() {
     // Switchiamo la visibilità tra bottone "Add" e il Form completo
-    this.formContainer.classList.toggle('hidden');
-    this.openBtn.classList.toggle('hidden');
-    
+    this.formContainer.classList.toggle("hidden");
+    this.openBtn.classList.toggle("hidden");
+
     // Se stiamo aprendo il form, diamo subito il focus al titolo
-    if (!this.formContainer.classList.contains('hidden')) {
-        this.titleInput.focus();
+    if (!this.formContainer.classList.contains("hidden")) {
+      this.titleInput.focus();
     }
   }
 
@@ -286,11 +335,11 @@ class ProjectInput {
     const description = this.descInput.value;
     const extra = this.extraInput.value;
 
-    const id = 'p' + Date.now(); 
+    const id = "p" + Date.now();
 
-    const newPrjElement = document.createElement('li');
+    const newPrjElement = document.createElement("li");
     newPrjElement.id = id;
-    newPrjElement.className = 'card';
+    newPrjElement.className = "card";
     newPrjElement.draggable = true;
     newPrjElement.dataset.extraInfo = extra;
     newPrjElement.innerHTML = `
@@ -302,10 +351,13 @@ class ProjectInput {
 
     document.querySelector(`#active-projects ul`).append(newPrjElement);
 
-    const newProjectItem = new ProjectItem(id, this.activeList.switchProject.bind(this.activeList));
+    const newProjectItem = new ProjectItem(
+      id,
+      this.activeList.switchProject.bind(this.activeList),
+    );
     this.activeList.projects.push(newProjectItem);
     this.activeList.updateVisibility();
-
+    this.activeList.saveToStorage();
     // Puliamo e CHIUDIAMO il form dopo l'invio
     this.form.reset();
     this.toggleForm();

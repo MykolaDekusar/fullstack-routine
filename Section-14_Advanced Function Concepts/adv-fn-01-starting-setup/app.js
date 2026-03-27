@@ -38,3 +38,27 @@ function printHobbies(h) {
 
 printHobbies(hobbies);
 console.log(hobbies); // Sorpresa! Anche l'array originale ora contiene "hunting".
+
+// Vediamo le factory function
+// Sono funzioni che producono altri funzioni
+// Es
+function calculateTax(amount, tax) {
+  return amount * tax;
+}
+
+const valAmoutn = calculateTax(100, 0.19);
+const incomeTax = calculateTax(100, 0.25);
+// Es di funzione factory
+function createTaxCalculator(tax) {
+  function calculateTax(amount) {
+    return amount * tax;
+  }
+  return calculateTax;
+}
+
+// Creaiamo 2 funzioni che hanno preconfigurati i due valori del tasso
+const calculateVatAmount = createTaxCalculator(0.19);
+const calculateIncomeTaxAmount = createTaxCalculator(0.25);
+
+console.log(calculateVatAmount(100)); //19
+console.log(calculateIncomeTaxAmount(200)); //50

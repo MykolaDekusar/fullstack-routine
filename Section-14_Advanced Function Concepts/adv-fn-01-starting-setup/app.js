@@ -39,26 +39,68 @@ function printHobbies(h) {
 printHobbies(hobbies);
 console.log(hobbies); // Sorpresa! Anche l'array originale ora contiene "hunting".
 
-// Vediamo le factory function
-// Sono funzioni che producono altri funzioni
-// Es
+// ❌ 1. APPROCCIO TRADIZIONALE
+// Devi passare ogni volta sia l'importo che la tassa. Ripetitivo e prono a errori.
 function calculateTax(amount, tax) {
   return amount * tax;
 }
+const traditionalVat = calculateTax(100, 0.22); 
 
-const valAmoutn = calculateTax(100, 0.19);
-const incomeTax = calculateTax(100, 0.25);
-// Es di funzione factory
-function createTaxCalculator(tax) {
-  function calculateTax(amount) {
-    return amount * tax;
-  }
-  return calculateTax;
+
+// ✅ 2. APPROCCIO FACTORY FUNCTION (La Fabbrica)
+let globalMultiplier = 1.1; // Variabile di Scope Globale
+
+function createTaxCalculator(taxRate) {
+  // Questa funzione "fabbrica" produce e restituisce una nuova funzione.
+  
+  return function(amount) {
+    // 🧠 MAGIA DELLA CLOSURE:
+    // Questa funzione interna "ricorda" per sempre il valore 'taxRate' 
+    // con cui è stata creata, anche dopo che la fabbrica ha finito di girare.
+    // Invece, legge 'globalMultiplier' in tempo reale dall'esterno.
+    return amount * taxRate * globalMultiplier;
+  };
 }
 
-// Creaiamo 2 funzioni che hanno preconfigurati i due valori del tasso
-const calculateVatAmount = createTaxCalculator(0.19);
-const calculateIncomeTaxAmount = createTaxCalculator(0.25);
+// Creiamo due calcolatori "pre-impostati" (il taxRate viene bloccato/ricordato)
+const calculateVat = createTaxCalculator(0.22); // IVA al 22%
+const calculateIncomeTax = createTaxCalculator(0.25); // Tassa al 25%
 
-console.log(calculateVatAmount(100)); //19
-console.log(calculateIncomeTaxAmount(200)); //50
+// Testiamo le funzioni create
+console.log(calculateVat(100));        // 100 * 0.22 * 1.1 = 24.2
+console.log(calculateIncomeTax(200));  // 200 * 0.25 * 1.1 = 55.0
+
+// Dimostrazione dello Scope Globale:
+// Se cambio il moltiplicatore globale, le funzioni se ne accorgono subito,
+// perché NON lo hanno bloccato (a differenza del taxRate).
+globalMultiplier = 1.2;
+
+console.log("Dopo il cambio globale:");
+console.log(calculateVat(100));        // 100 * 0.22 * 1.2 = 26.4
+console.log(calculateIncomeTax(200));  // 200 * 0.25 * 1.2 = 60.0
+
+// VARIABILI GLOBALI
+let userName = "Nico";
+let pName = "Nicolas"; 
+
+function greetUser() {
+  // 1. LEGGE LA VARIABILE ESTERNA
+  // Non salva "Nico", ma si appunta: "Vai a leggere cosa c'è dentro userName in questo momento"
+  let name = userName; 
+  console.log("Hi " + name);
+  
+  // 2. SHADOWING (Oscuramento)
+  // Creiamo una variabile locale con lo STESSO NOME di una globale.
+  // La variabile locale "vince" sempre su quella globale all'interno di questa funzione.
+  let pName = "Anna"; 
+  console.log("Hi " + pName); // Stamperà "Anna", ignorando "Nicolas"
+}
+
+// Cambiamo il valore della variabile globale PRIMA di chiamare la funzione
+userName = "Max";
+
+// Eseguiamo la funzione
+greetUser(); 
+// Risultato: 
+// "Hi Max" (Perché legge il valore aggiornato della globale)
+// "Hi Anna" (Perché la variabile locale oscura quella globale)

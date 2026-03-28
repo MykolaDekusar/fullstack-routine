@@ -44,18 +44,17 @@ console.log(hobbies); // Sorpresa! Anche l'array originale ora contiene "hunting
 function calculateTax(amount, tax) {
   return amount * tax;
 }
-const traditionalVat = calculateTax(100, 0.22); 
-
+const traditionalVat = calculateTax(100, 0.22);
 
 // ✅ 2. APPROCCIO FACTORY FUNCTION (La Fabbrica)
 let globalMultiplier = 1.1; // Variabile di Scope Globale
 
 function createTaxCalculator(taxRate) {
   // Questa funzione "fabbrica" produce e restituisce una nuova funzione.
-  
-  return function(amount) {
+
+  return function (amount) {
     // 🧠 MAGIA DELLA CLOSURE:
-    // Questa funzione interna "ricorda" per sempre il valore 'taxRate' 
+    // Questa funzione interna "ricorda" per sempre il valore 'taxRate'
     // con cui è stata creata, anche dopo che la fabbrica ha finito di girare.
     // Invece, legge 'globalMultiplier' in tempo reale dall'esterno.
     return amount * taxRate * globalMultiplier;
@@ -67,8 +66,8 @@ const calculateVat = createTaxCalculator(0.22); // IVA al 22%
 const calculateIncomeTax = createTaxCalculator(0.25); // Tassa al 25%
 
 // Testiamo le funzioni create
-console.log(calculateVat(100));        // 100 * 0.22 * 1.1 = 24.2
-console.log(calculateIncomeTax(200));  // 200 * 0.25 * 1.1 = 55.0
+console.log(calculateVat(100)); // 100 * 0.22 * 1.1 = 24.2
+console.log(calculateIncomeTax(200)); // 200 * 0.25 * 1.1 = 55.0
 
 // Dimostrazione dello Scope Globale:
 // Se cambio il moltiplicatore globale, le funzioni se ne accorgono subito,
@@ -76,23 +75,23 @@ console.log(calculateIncomeTax(200));  // 200 * 0.25 * 1.1 = 55.0
 globalMultiplier = 1.2;
 
 console.log("Dopo il cambio globale:");
-console.log(calculateVat(100));        // 100 * 0.22 * 1.2 = 26.4
-console.log(calculateIncomeTax(200));  // 200 * 0.25 * 1.2 = 60.0
+console.log(calculateVat(100)); // 100 * 0.22 * 1.2 = 26.4
+console.log(calculateIncomeTax(200)); // 200 * 0.25 * 1.2 = 60.0
 
 // VARIABILI GLOBALI
 let userName = "Nico";
-let pName = "Nicolas"; 
+let pName = "Nicolas";
 
 function greetUser() {
   // 1. LEGGE LA VARIABILE ESTERNA
   // Non salva "Nico", ma si appunta: "Vai a leggere cosa c'è dentro userName in questo momento"
-  let name = userName; 
+  let name = userName;
   console.log("Hi " + name);
-  
+
   // 2. SHADOWING (Oscuramento)
   // Creiamo una variabile locale con lo STESSO NOME di una globale.
   // La variabile locale "vince" sempre su quella globale all'interno di questa funzione.
-  let pName = "Anna"; 
+  let pName = "Anna";
   console.log("Hi " + pName); // Stamperà "Anna", ignorando "Nicolas"
 }
 
@@ -100,7 +99,49 @@ function greetUser() {
 userName = "Max";
 
 // Eseguiamo la funzione
-greetUser(); 
-// Risultato: 
+greetUser();
+// Risultato:
 // "Hi Max" (Perché legge il valore aggiornato della globale)
 // "Hi Anna" (Perché la variabile locale oscura quella globale)
+
+
+
+// RECURSION
+/**
+ * CALCOLO POTENZA: Iterativo
+ * Ragionamento: "Parto da 1 e moltiplico per x tante volte quante dice n"
+ */
+function powerOf(x, n) {
+  let result = 1; // Punto di partenza (neutro per la moltiplicazione)
+
+  for (let i = 0; i < n; i++) {
+    result *= x; // Ad ogni giro, accumulo il valore
+  }
+
+  return result;
+}
+
+console.log("Iterativo (2^3):", powerOf(2, 3)); // 8
+
+/**
+ * CALCOLO POTENZA: Ricorsivo
+ * Ragionamento: "x^n è uguale a x moltiplicato per x^(n-1)"
+ */
+function recPowerOf(x, n) {
+  // --- 1. BASE CASE (Punto di uscita) ---
+  // Se n è 0, il risultato è sempre 1 (qualsiasi numero elevato a 0 fa 1)
+  // Questo ferma la ricorsione ed evita che il computer esploda!
+  if (n === 0) {
+    return 1;
+  }
+
+  // --- 2. RECURSIVE STEP (Il richiamo) ---
+  // Moltiplico x per il risultato della stessa funzione, ma con n diminuito di 1
+  return x * recPowerOf(x, n - 1);
+}
+
+// Versione "Pro" contratta (Ternary Operator)
+const recPowerOfShort = (x, n) => (n === 0 ? 1 : x * recPowerOfShort(x, n - 1));
+
+console.log("Ricorsivo (2^3):", recPowerOf(2, 3)); // 8
+console.log("Ricorsivo Short (2^3):", recPowerOfShort(2, 3)); // 8

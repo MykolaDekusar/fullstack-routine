@@ -104,8 +104,6 @@ greetUser();
 // "Hi Max" (Perché legge il valore aggiornato della globale)
 // "Hi Anna" (Perché la variabile locale oscura quella globale)
 
-
-
 // RECURSION
 /**
  * CALCOLO POTENZA: Iterativo
@@ -145,3 +143,45 @@ const recPowerOfShort = (x, n) => (n === 0 ? 1 : x * recPowerOfShort(x, n - 1));
 
 console.log("Ricorsivo (2^3):", recPowerOf(2, 3)); // 8
 console.log("Ricorsivo Short (2^3):", recPowerOfShort(2, 3)); // 8
+
+const myself = {
+  name: "Nico",
+  friends: [
+    {
+      name: "Argjent",
+      friends: [
+        {
+          name: "Don Di Alba",
+          friends: [{ name: "Marco", friends: [{ name: "Giulia" }] }],
+        },
+      ],
+    },
+    { name: "Bebo" },
+  ],
+};
+
+function getFriendNames(person) {
+  // 1. IDENTITÀ: Ogni "copia" della funzione si occupa solo della persona che riceve.
+  // In questo momento, per questa specifica chiamata, "person" è un individuo unico.
+  const collectedNames = [];
+  collectedNames.push(person.name);
+
+  // 2. CASO BASE (Punto di uscita): Se la persona non ha amici,
+  // non c'è nulla da esplorare. Restituisco l'array con il solo nome della persona.
+  if (!person.friends || person.friends.length === 0) {
+    return collectedNames;
+  }
+
+  // 3. DISCESA RICORSIVA: Se ci sono amici, chiedo alla funzione di esplorare ognuno di loro.
+  for (const friend of person.friends) {
+    // "Ehi getFriendNames, vai a vedere chi ha con sé questo amico..."
+    const namesFromBranch = getFriendNames(friend);
+
+    // "...e quando torni, aggiungi tutto quello che hai trovato alla mia lista."
+    collectedNames.push(...namesFromBranch);
+  }
+
+  return collectedNames;
+}
+
+console.log(getFriendNames(myself));

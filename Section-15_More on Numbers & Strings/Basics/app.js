@@ -80,3 +80,48 @@ console.log(Number(10n) - 4); // 6 (Corretto)
 
 // Soluzione C: Usare parseInt (anche se meno comune per i BigInt)
 console.log(parseInt(10n) - 4); // 6 (Corretto)
+
+
+// --- COSTANTI SPECIALI ---
+// Rappresenta l'infinito positivo
+const piuInfinito = Number.POSITIVE_INFINITY; // Infinity
+
+// Rappresenta l'infinito negativo
+const menoInfinito = Number.NEGATIVE_INFINITY; // -Infinity
+
+
+// --- METODI DI VALIDAZIONE ---
+
+// Verifica se il valore è un numero finito (ritorna false per Infinity o NaN)
+Number.isFinite(Infinity);  // false
+Number.isFinite(100);       // true
+
+// Verifica se il valore è "Not-a-Number"
+// Molto utile per capire se un'operazione matematica è fallita
+Number.isNaN(NaN);          // true
+Number.isNaN(5);            // false
+
+// Converte una stringa in un numero intero
+Number.parseInt("42px");    // 42
+
+// --- PROPRIETÀ (Costanti) ---
+Math.PI;      // 3.141592653589793 (Rapporto tra circonferenza e diametro)
+Math.E;       // 2.718... (Base dei logaritmi naturali)
+
+
+// --- METODI COMUNI ---
+
+// Valore Assoluto: trasforma numeri negativi in positivi
+Math.abs(-5);    // 5
+
+// Numeri Random: genera un decimale tra 0 (incluso) e 1 (escluso)
+Math.random();   // es: 0.4523...
+
+// Arrotondamenti
+Math.round(4.7); // 5 (all'intero più vicino)
+Math.floor(4.7); // 4 (per difetto)
+Math.ceil(4.1);  // 5 (per eccesso)
+
+// Potenze e Radici
+Math.pow(2, 3);  // 8 (2 elevato alla terza)
+Math.sqrt(16);   // 4 (radice quadrata)

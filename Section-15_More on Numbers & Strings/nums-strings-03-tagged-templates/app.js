@@ -36,3 +36,27 @@ const productOutput = productDescription`This product (${prodName}) is ${prodPri
 // Il risultato sarà l'oggetto restituito dalla funzione
 console.log(productOutput);
 // Output: { name: 'Corso JavaScript', price: 29.99, category: 'prezzo equo' }
+
+// La tua RegEx per le Email
+const emailRegex = /^\S+@\S+\.\S+$/;
+
+/**
+ * DECOSTRUIAMO IL PATTERN:
+ * * ^        -> Inizio della stringa (non deve esserci nulla prima)
+ * \S       -> Qualsiasi carattere che NON sia uno spazio vuoto
+ * +        -> "Uno o più" (indica che vogliamo almeno un carattere \S)
+ * @        -> Il carattere letterale "@"
+ * \S+      -> Di nuovo, uno o più caratteri (non spazi) dopo la @
+ * \.       -> Un punto letterale "." (lo slash \ serve a "evadere" il punto, 
+ * perché il punto da solo in RegEx significa "qualsiasi carattere")
+ * \S+      -> Uno o più caratteri dopo il punto (il dominio, es: .com, .it)
+ * $        -> Fine della stringa (non deve esserci nulla dopo)
+ */
+
+const regex = /^\S+@\S+\.\S+$/;
+
+const emailValida = "mario.rossi@gmail.com";
+const emailErrata = "mario rossi@gmail"; // Contiene uno spazio e manca il punto finale
+
+console.log(regex.test(emailValida)); // true
+console.log(regex.test(emailErrata)); // false

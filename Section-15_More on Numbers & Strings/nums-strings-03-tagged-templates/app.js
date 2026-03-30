@@ -60,3 +60,5 @@ const emailErrata = "mario rossi@gmail"; // Contiene uno spazio e manca il punto
 
 console.log(regex.test(emailValida)); // true
 console.log(regex.test(emailErrata)); // false
+
+// Le RegEx non dobbiamo impararlea memoria

@@ -1,31 +1,44 @@
 const button = document.querySelector("button");
 
-// Creiamo una funzione per ottenere la posizione dell'utente
-// Se falliamo diamo errore
+/**
+ * Avvia un timer basato su Promise.
+ * @param {number} duration - Millisecondi di attesa.
+ * @returns {Promise}
+ */
+function setTimer(duration) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve("Timer completato!");
+    }, duration);
+  });
+}
 
+/**
+ * Ottiene la posizione geografica e gestisce il flusso asincrono.
+ */
 function getUserLocation() {
+  // 1. Operazione Asincrona (Web API)
   navigator.geolocation.getCurrentPosition(
     (posData) => {
-      setTimer(2000).then((data) => {
-        console.log(data, posData);
+      // Questo codice viene eseguito solo quando l'utente accetta e il browser ottiene i dati
+      setTimer(2000).then((message) => {
+        console.log(message, posData);
       });
     },
-    (error) => console.log(error),
+    (error) => {
+      console.error("Errore nella localizzazione:", error);
+    }
   );
-  //anche se settassimo setTimeout a 0 esso andra nell'event loop ritardando l'esecuzione del codice
+
+  // 2. Timeout a 0 (Macrotask)
+  // Anche se lo 0 suggerisce un'esecuzione immediata, deve passare per la Task Queue.
   setTimeout(() => {
-    console.log("I'm timed to 0");
-  }, 0); // 0 non è il tempo garantito, è il tempo minimo possibile
-  console.log("Getting Position..."); // Verra mostato subito perche navigator richiede tempo ed è async
+    console.log("I'm timed to 0 (Eseguito dopo il codice sincrono)");
+  }, 0);
+
+  // 3. Operazione Sincrona
+  // Viene eseguita immediatamente perché si trova nel thread principale (Call Stack).
+  console.log("Getting Position..."); 
 }
 
 button.addEventListener("click", getUserLocation);
-
-function setTimer(duration) {
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-  return promise;
-}

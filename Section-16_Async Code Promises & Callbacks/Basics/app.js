@@ -10,6 +10,10 @@ function getUserLocation() {
     },
     (error) => console.log(error),
   );
+  //anche se settassimo setTimeout a 0 esso andra nell'event loop ritardando l'esecuzione del codice
+  setTimeout(() =>{
+    console.log("I'm timed to 0");
+  }, 0); // 0 non è il tempo garantito, è il tempo minimo possibile
   console.log('Getting Position...'); // Verra mostato subito perche navigator richiede tempo ed è async
 }
 

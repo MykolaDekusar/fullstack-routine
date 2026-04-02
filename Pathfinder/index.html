@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Pathfinding Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Pathfinder <span>Visualizer</span></h1>
+        <div class="controls">
+            <select id="algo-select">
+                <option value="astar">Algoritmo A* (Punta dritto)</option>
+                <option value="dijkstra">Algoritmo Dijkstra (A macchia d'olio)</option>
+                <option value="bfs">Algoritmo BFS (A cerchi concentrici)</option>
+                <option value="dfs">Algoritmo DFS (Il Serpente - Non ottimale)</option>
+            </select>
+            
+            <button id="start-btn">Avvia Ricerca</button>
+            <button id="clear-btn" class="secondary">Pulisci Griglia</button>
+        </div>
+        <div class="legend">
+            <span><div class="node-legend start"></div> Partenza</span>
+            <span><div class="node-legend end"></div> Arrivo</span>
+            <span><div class="node-legend wall"></div> Muro (Trascina il mouse)</span>
+        </div>
+    </header>
+
+    <div id="grid-container"></div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
